@@ -26,7 +26,7 @@ Plot.plot({
     xscale: "band",
     x: {type: "band"},
     y: {},
-    title: "Ongevallen per maand per jaar",
+    title: "Gekende ongevallen met gewonden per maand per jaar",
     marks: [
         Plot.cell(
             data,
@@ -52,6 +52,18 @@ view(slider)
 
 
 ## Title 2
+
+````js
+Plot.plot({
+  y: {grid: true},
+  color: {legend: true},
+  marks: [
+    Plot.rectY(data, Plot.binX({y: "count"}, {x: "DT_YEAR_COLLISION", fill: "TX_CLASS_ACCIDENTS_NL", insetLeft: -4, insetRight: -4 })),
+    Plot.ruleY([0])
+  ],
+  xAxis: {tickFormat: d3.format("d")}
+})
+````
 
 
 
