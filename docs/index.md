@@ -65,5 +65,35 @@ Plot.plot({
 })
 ````
 
+## Title 3
+
+````js
+
+const belgium = await FileAttachment("data/Gemeenten_Fusies.json").json()
+
+const width = 600
+const height = 600
+
+// Create an SVG element
+const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
+
+// Create a projection for Belgium
+const projection = d3.geoMercator().fitSize([width, height], topojson.feature(belgium, belgium.objects.Gemeenten));
+
+// Create a path generator
+const path = d3.geoPath().projection(projection);
+
+// Render the map
+svg.append("path")
+    .datum(topojson.feature(belgium, belgium.objects.Gemeenten))
+    .attr("d", path)
+    .attr("fill", "lightgray")
+    .attr("stroke", "white");
+
+// Display the map
+svg.node()
+
+````
+
 
 
