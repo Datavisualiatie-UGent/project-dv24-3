@@ -11,11 +11,16 @@ Introstukje
 
 ````js
 const rawdata = await FileAttachment("data/OPENDATA_MAP_2017-2022.csv").csv()
-const data = rawdata.filter((d, i) => d.CD_ROAD_USR_TYPE1 < 99 && d.CD_ROAD_USR_TYPE2 < 99).map((d, i) => {
+const data = rawdata.map( (d,i) => {
     d.DT_YEAR_COLLISION = d.DT_YEAR_COLLISION;
     d.DT_MONTH_COLLISION = parseInt(d.DT_MONTH_COLLISION);
     return d;
 })
+/*    .filter((d, i) => d.CD_ROAD_USR_TYPE1 < 99 && d.CD_ROAD_USR_TYPE2 < 99).map((d, i) => {
+    d.DT_YEAR_COLLISION = d.DT_YEAR_COLLISION;
+    d.DT_MONTH_COLLISION = parseInt(d.DT_MONTH_COLLISION);
+    return d;
+}) */
 ````
 
 ````js
@@ -78,7 +83,19 @@ Plot.plot({
     xAxis: {tickFormat: d3.format("d")}
 })
 ````
+## ongevallen op kruispunt en niet op kruispunt
 
+````js
+Plot.plot({
+    y: {grid:true},
+    color: {legend: true},
+    marks: [
+        Plot.rectY(data, Plot.binX({y: "count"}, {x: "DT_YEAR_COLLISION", fill: "TX_CROSSWAY_NL", insetLeft: -4, insetRight: -4})),
+        Plot.ruleY([0])
+    ],
+    xAxis: {tickFormat: d3.format("d")}
+})
+````
 ## Title 3
 
 ````js
