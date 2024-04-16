@@ -90,10 +90,8 @@ svg.append("path")
     .attr("fill", "lightgray")
     .attr("stroke", "white");
 
-// Display the map
-svg.node()
-
 ````
+${svg.node()}
 
 
 
