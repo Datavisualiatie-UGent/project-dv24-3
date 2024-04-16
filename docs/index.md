@@ -11,7 +11,7 @@ Introstukje
 
 ````js
 const rawdata = await FileAttachment("data/OPENDATA_MAP_2017-2022.csv").csv()
-const data = rawdata.map( (d,i) => {
+const data = rawdata.map((d, i) => {
     d.DT_YEAR_COLLISION = d.DT_YEAR_COLLISION;
     d.DT_MONTH_COLLISION = parseInt(d.DT_MONTH_COLLISION);
     return d;
@@ -25,7 +25,7 @@ const data = rawdata.map( (d,i) => {
 
 ````js
 Plot.plot({
-    color: { legend: true, scheme: "Oranges" },
+    color: {legend: true, scheme: "Oranges"},
     marginTop: 0,
     insetRight: 0,
     xscale: "band",
@@ -36,8 +36,8 @@ Plot.plot({
         Plot.cell(
             data,
             Plot.group(
-                { fill: "count" },
-                { x: "DT_YEAR_COLLISION", y: "DT_MONTH_COLLISION", tip: true }
+                {fill: "count"},
+                {x: "DT_YEAR_COLLISION", y: "DT_MONTH_COLLISION", tip: true}
             )
         )
     ]
@@ -55,18 +55,46 @@ const slider = view(Inputs.range([2017, 2022], {value: 5, step: 1, label: "Jaar"
 view(slider)
 ````
 
+## Type bestuurders dat ongevallen hebben
+# logaritmische kleurschaal
+````js
+Plot.plot({
+    color: {legend: true, scheme: "Oranges", type: "log"},
+    marginTop: 0,
+    insetRight: 0,
+    xscale: "band",
+    x: {type: "band"},
+    y: {},
+    title: "ongevallen per betrokken bestuurders",
+    marks: [
+        Plot.cell(
+            data,
+            Plot.group(
+                {fill: "count"},
+                {x: "TX_ROAD_USR_TYPE1_NL", y: "TX_ROAD_USR_TYPE2_NL", tip: true}
+            )
+        )
+    ]
+})
+````
+
 
 ## Title 2
 
 ````js
 Plot.plot({
-  y: {grid: true},
-  color: {legend: true},
-  marks: [
-    Plot.rectY(data, Plot.binX({y: "count"}, {x: "DT_YEAR_COLLISION", fill: "TX_CLASS_ACCIDENTS_NL", insetLeft: -4, insetRight: -4 })),
-    Plot.ruleY([0])
-  ],
-  xAxis: {tickFormat: d3.format("d")}
+    y: {grid: true},
+    color: {legend: true},
+    marks: [
+        Plot.rectY(data, Plot.binX({y: "count"}, {
+            x: "DT_YEAR_COLLISION",
+            fill: "TX_CLASS_ACCIDENTS_NL",
+            insetLeft: -4,
+            insetRight: -4
+        })),
+        Plot.ruleY([0])
+    ],
+    xAxis: {tickFormat: d3.format("d")}
 })
 ````
 
@@ -74,28 +102,114 @@ Plot.plot({
 
 ````js
 Plot.plot({
-    y: {grid:true},
+    y: {grid: true},
     color: {legend: true},
     marks: [
-        Plot.rectY(data, Plot.binX({y: "count"}, {x: "DT_YEAR_COLLISION", fill: "TX_BUILD_UP_AREA_NL", insetLeft: -4, insetRight: -4})),
+        Plot.rectY(data, Plot.binX({y: "count"}, {
+            x: "DT_YEAR_COLLISION",
+            fill: "TX_BUILD_UP_AREA_NL",
+            insetLeft: -4,
+            insetRight: -4
+        })),
         Plot.ruleY([0])
     ],
     xAxis: {tickFormat: d3.format("d")}
 })
 ````
+
 ## ongevallen op kruispunt en niet op kruispunt
 
 ````js
 Plot.plot({
-    y: {grid:true},
+    y: {grid: true},
     color: {legend: true},
     marks: [
-        Plot.rectY(data, Plot.binX({y: "count"}, {x: "DT_YEAR_COLLISION", fill: "TX_CROSSWAY_NL", insetLeft: -4, insetRight: -4})),
+        Plot.rectY(data, Plot.binX({y: "count"}, {
+            x: "DT_YEAR_COLLISION",
+            fill: "TX_CROSSWAY_NL",
+            insetLeft: -4,
+            insetRight: -4
+        })),
         Plot.ruleY([0])
     ],
     xAxis: {tickFormat: d3.format("d")}
 })
 ````
+## Weersomstandigheden bij ongevallen
+
+````js
+Plot.plot({
+    y: {grid: true},
+    color: {legend: true},
+    marks: [
+        Plot.rectY(data, Plot.binX({y: "count"}, {
+            x: "DT_YEAR_COLLISION",
+            fill: "TX_WEATHER_NL",
+            insetLeft: -4,
+            insetRight: -4
+        })),
+        Plot.ruleY([0])
+    ],
+    xAxis: {tickFormat: d3.format("d")}
+})
+````
+
+## Wegconditie bij ongevallen
+
+````js
+Plot.plot({
+    y: {grid: true},
+    color: {legend: true},
+    marks: [
+        Plot.rectY(data, Plot.binX({y: "count"}, {
+            x: "DT_YEAR_COLLISION",
+            fill: "TX_ROAD_CONDITION_NL",
+            insetLeft: -4,
+            insetRight: -4
+        })),
+        Plot.ruleY([0])
+    ],
+    xAxis: {tickFormat: d3.format("d")}
+})
+````
+
+## Lichtgesteldheid bij ongevallen
+
+````js
+Plot.plot({
+    y: {grid: true},
+    color: {legend: true},
+    marks: [
+        Plot.rectY(data, Plot.binX({y: "count"}, {
+            x: "DT_YEAR_COLLISION",
+            fill: "TX_LIGHT_CONDITION_NL",
+            insetLeft: -4,
+            insetRight: -4
+        })),
+        Plot.ruleY([0])
+    ],
+    xAxis: {tickFormat: d3.format("d")}
+})
+````
+## Type weg bij ongevallen
+
+````js
+Plot.plot({
+    y: {grid: true},
+    color: {legend: true},
+    marks: [
+        Plot.rectY(data, Plot.binX({y: "count"}, {
+            x: "DT_YEAR_COLLISION",
+            fill: "CD_ROAD_TYPE_NL",
+            insetLeft: -4,
+            insetRight: -4
+        })),
+        Plot.ruleY([0])
+    ],
+    xAxis: {tickFormat: d3.format("d")}
+})
+````
+
 ## Title 3
 
 ````js
