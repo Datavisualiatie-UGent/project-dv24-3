@@ -65,6 +65,20 @@ Plot.plot({
 })
 ````
 
+## Binnen en buiten bebouwde kom
+
+````js
+Plot.plot({
+    y: {grid:true},
+    color: {legend: true},
+    marks: [
+        Plot.rectY(data, Plot.binX({y: "count"}, {x: "DT_YEAR_COLLISION", fill: "TX_BUILD_UP_AREA_NL", insetLeft: -4, insetRight: -4})),
+        Plot.ruleY([0])
+    ],
+    xAxis: {tickFormat: d3.format("d")}
+})
+````
+
 ## Title 3
 
 ````js
