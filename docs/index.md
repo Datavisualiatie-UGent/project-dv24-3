@@ -55,6 +55,44 @@ const slider = view(Inputs.range([2017, 2022], {value: 5, step: 1, label: "Jaar"
 view(slider)
 ````
 
+## waffle chart
+
+````js
+const provdata = data.map((d,i) => d.TX_PROV_COLLISION_NL)
+let provuniqedata = {}
+provdata.forEach((d, i) => provuniqedata[d] = (provuniqedata[d] || 0) + 1)
+let units = [];
+Object.keys(provuniqedata).forEach((key, index) => {
+    let label = key
+    if (key == ""){
+        label = "unknown"
+    }
+    units.push({group: label, label: label, freq: provuniqedata[key]})
+})
+console.log(units)
+units = units.flatMap(d => d3.range(Math.round(d.freq / 1000)).map(() => d))
+units = units.sort( (d1, d2) => d2.freq - d1.freq)
+console.log(units)
+````
+### 1 unit = 1000 accidents
+````js
+Plot.plot({
+  marks: [
+    Plot.cell(
+        units,
+      Plot.stackX({
+        y: (_, i) => Math.floor(i/10),
+        fill: "label",
+        title: "group"
+      })
+    )
+  ],
+  x: { axis: null },
+  y: { axis: null },
+  color: { scheme: "Sinebow", legend: true}
+})
+````
+
 ## Type bestuurders dat ongevallen hebben
 # logaritmische kleurschaal
 ````js
