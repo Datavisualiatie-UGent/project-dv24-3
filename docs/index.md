@@ -77,50 +77,54 @@ const geolocations = rawdata.map(d => ({
     x: parseFloat(d.MS_X_COORD),
     y: parseFloat(d.MS_Y_COORD),
     type: d.TX_CLASS_ACCIDENTS_NL.toLowerCase()
-}));
+})).filter(d => isFinite(d.x) && isFinite(d.y));
+
+proj4.defs("EPSG:31370", "+proj=lcc +lat_0=90 +lon_0=4.36748666666667 +lat_1=51.1666672333333 +lat_2=49.8333339 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,-0.3366,0.457,-1.8422,-1.2747 +units=m +no_defs +type=crs");
+
+// Convert all geolocations to geographic coordinates (Lambert 1972 projection)
+const geographic_coordinates = geolocations.map(d => {
+    const transformedCoordinates = proj4('EPSG:31370', 'EPSG:4326', [d.x, d.y]);
+    return { coordinates: transformedCoordinates, type: d.type };
+    });
 
 const distinct_types = [...new Set(geolocations.map(d => d.type))];
 
+const coordinates_by_type = new Object();
+
+distinct_types.forEach(type => {
+    const coordinates = geographic_coordinates.filter(d => d.type === type).map(d => ({ coordinates: d.coordinates, type:d.type }));
+    coordinates_by_type[type] = coordinates;
+});
+
+
 function chart(value) {
-  const width = 1200;
-  const height = 1000;
+    const width = 800;
+    const height = 600;
 
-  proj4.defs("EPSG:31370", "+proj=lcc +lat_0=90 +lon_0=4.36748666666667 +lat_1=51.1666672333333 +lat_2=49.8333339 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,-0.3366,0.457,-1.8422,-1.2747 +units=m +no_defs +type=crs");
+    // Create a new SVG element
+    const svg = d3.create("svg")
+        .attr("viewBox", [0, 0, width, height]);
 
-  // Convert all geolocations to geographic coordinates (Lambert 1972 projection)
-  const geographicCoordinates = geolocations.map(d => {
-    // Check if coordinates are finite numbers
-    if (!isFinite(d.x) || !isFinite(d.y)) {
-      return { coordinates: [NaN, NaN], type: d.type }; // Return NaN for invalid coordinates
-    }
-    const transformedCoordinates = proj4('EPSG:31370', 'EPSG:4326', [d.x, d.y]);
-    return { coordinates: transformedCoordinates, type: d.type };
-}).filter(d => !isNaN(d.coordinates[0]) && !isNaN(d.coordinates[1]));
+    // Define the Mercator projection
+    const projection = d3.geoMercator().fitSize([width, height], topojson.feature(belgium, belgium.objects.Gemeenten));
+    
+    // Create a path generator
+    const path = d3.geoPath().projection(projection);
+    
+    svg.append("path")
+        .datum(topojson.feature(belgium, belgium.objects.Gemeenten))
+        .attr("d", path)
+        .attr("fill", "lightgray")
+        .attr("stroke", "white");
 
-  // Create a new SVG element
-  const svg = d3.create("svg")
-     .attr("viewBox", [0, 0, width, height]);
-
-  // Define the Mercator projection
-  const projection = d3.geoMercator().fitSize([width, height], topojson.feature(belgium, belgium.objects.Gemeenten));
-  
-  // Create a path generator
-  const path = d3.geoPath().projection(projection);
-  
-  svg.append("path")
-    .datum(topojson.feature(belgium, belgium.objects.Gemeenten))
-    .attr("d", path)
-    .attr("fill", "lightgray")
-    .attr("stroke", "white");
-
-  // Define a scale for colors
-  const colorScale = d3.scaleOrdinal()
-    .domain(geographicCoordinates.map(d => d.type))
-    .range(d3.schemeCategory10);
+    // Define a scale for colors
+    const colorScale = d3.scaleOrdinal()
+        .domain(geographic_coordinates.map(d => d.type))
+        .range(d3.schemeCategory10);
 
     // Define the legend item width and height
-    const legendItemWidth = 20;
-    const legendItemHeight = 20;
+    const legendItemWidth = 30;
+    const legendItemHeight = 30;
       
       // Create a legend for the colors
     const legend = svg.append("g")
@@ -148,29 +152,26 @@ function chart(value) {
         .style("font-size", "16px")
         .style("font-family", "Arial");
 
-  // Append circle elements for each geographic coordinate
-  const types_displayed = svg.selectAll("circle")
-    .data(geographicCoordinates)
-    .enter().append("circle")
-      .attr("cx", d => projection(d.coordinates)[0])
-      .attr("cy", d => projection(d.coordinates)[1])
-      .attr("r", 1)
-      .attr("fill", d => colorScale(d.type))
-      .attr("class", d => "type-" + d.type); // Add class for easier selection
+    // Update function
+    function update(value) {
+        const displayed = value.reduce((result, key) => {
+            if (coordinates_by_type[key]) {
+                result = result.concat(coordinates_by_type[key]);
+            }
+            return result;
+        }, []);
 
-  // Update function
-  function update(value) {
-    svg.selectAll("circle") // Select all circles
-      .data(geographicCoordinates.filter(d => value.includes(d.type)), d => d.type) // Bind data filtered by checkbox values
-      .join(
-        enter => enter.append("circle") // Append new circles for entered data
-          .attr("cx", d => projection(d.coordinates)[0])
-          .attr("cy", d => projection(d.coordinates)[1])
-          .attr("r", 1)
-          .attr("fill", d => colorScale(d.type))
-          .attr("class", d => "type-" + d.type), // Add class for easier selection
-        exit => exit.remove() // Remove circles for exited data
-      );
+        svg.selectAll("circle") // Select all circles
+        .data(displayed, d => d.type) // Bind data filtered by checkbox values
+        .join(
+            enter => enter.append("circle") // Append new circles for entered data
+            .attr("cx", d => projection(d.coordinates)[0])
+            .attr("cy", d => projection(d.coordinates)[1])
+            .attr("r", 1)
+            .attr("fill", d => colorScale(d.type))
+            .attr("class", d => "type-" + d.type),
+            exit => exit.remove() // Remove circles for exited data
+        );
   }
 
   // Initialize with all types displayed
@@ -193,9 +194,8 @@ function chart(value) {
 }
 
 let type_victim = chart(distinct_types);
-//let checkboxes = Inputs.bind(Inputs.checkbox(distinct_types, {value: distinct_types, format: (x) => x}), view(type_victim));
 
 ````
-
+${Inputs.bind(Inputs.checkbox(distinct_types, {value: distinct_types, format: (x) => x}), type_victim)}
 ${view(type_victim)}
 
