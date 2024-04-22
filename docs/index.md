@@ -25,15 +25,15 @@ Plot.plot({
     aspectRatio: 1,
     insetRight: 50,
     xscale: "band",
-    x: {type: "band", label: "Jaar"},
-    y: {label: "Maand"},
+    x: {type: "band", label: "Maand"},
+    y: {label: "Jaar"},
     //title: "Gekende ongevallen met gewonden per maand per jaar",
     marks: [
         Plot.cell(
             data,
             Plot.group(
                 {fill: "count"},
-                {x: "DT_YEAR_COLLISION", y: "DT_MONTH_COLLISION", tip: true}
+                {x: "DT_MONTH_COLLISION", y: "DT_YEAR_COLLISION", tip: true}
             )
         )
     ]
@@ -80,7 +80,7 @@ Plot.plot({
 })
 ````
 
-## Heatmap: Ongevallen per betrokken bestuurders
+## Heatmap: Ongevallen per betrokken weggebruiker
 ### logaritmische kleurschaal
 ````js
 Plot.plot({
