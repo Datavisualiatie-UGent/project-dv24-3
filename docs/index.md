@@ -21,7 +21,6 @@ const data = rawdata.map((d, i) => {
 Plot.plot({
     color: {legend: true, scheme: "Oranges"},
     marginTop: 0,
-    insetRight: 0,
     aspectRatio: 1,
     insetRight: 50,
     xscale: "band",
@@ -112,19 +111,19 @@ Plot.plot({
 ## Stacked barchart: Type slachtoffer in ongevallen met gewonden
 
 ````js
+
 Plot.plot({
+    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
     y: {grid: true},
     color: {legend: true},
     marks: [
         Plot.rectY(data, Plot.binX({y: "count"}, {
             x: "DT_YEAR_COLLISION",
             fill: "TX_CLASS_ACCIDENTS_NL",
-            insetLeft: -4,
-            insetRight: -4
+            insetLeft: -10,
         })),
         Plot.ruleY([0])
-    ],
-    xAxis: {tickFormat: d3.format("d")}
+    ]
 })
 ````
 
@@ -132,14 +131,14 @@ Plot.plot({
 
 ````js
 Plot.plot({
+    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
     y: {grid: true},
     color: {legend: true},
     marks: [
         Plot.rectY(data, Plot.binX({y: "count"}, {
             x: "DT_YEAR_COLLISION",
             fill: "TX_BUILD_UP_AREA_NL",
-            insetLeft: -4,
-            insetRight: -4
+            insetLeft: -10,
         })),
         Plot.ruleY([0])
     ],
@@ -151,14 +150,14 @@ Plot.plot({
 
 ````js
 Plot.plot({
+    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
     y: {grid: true},
     color: {legend: true},
     marks: [
         Plot.rectY(data, Plot.binX({y: "count"}, {
             x: "DT_YEAR_COLLISION",
             fill: "TX_CROSSWAY_NL",
-            insetLeft: -4,
-            insetRight: -4
+            insetLeft: -10,
         })),
         Plot.ruleY([0])
     ],
@@ -169,14 +168,14 @@ Plot.plot({
 
 ````js
 Plot.plot({
+    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
     y: {grid: true},
     color: {legend: true},
     marks: [
         Plot.rectY(data, Plot.binX({y: "count"}, {
             x: "DT_YEAR_COLLISION",
             fill: "TX_WEATHER_NL",
-            insetLeft: -4,
-            insetRight: -4
+            insetLeft: -10,
         })),
         Plot.ruleY([0])
     ],
@@ -188,14 +187,14 @@ Plot.plot({
 
 ````js
 Plot.plot({
+    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
     y: {grid: true},
     color: {legend: true},
     marks: [
         Plot.rectY(data, Plot.binX({y: "count"}, {
             x: "DT_YEAR_COLLISION",
             fill: "TX_ROAD_CONDITION_NL",
-            insetLeft: -4,
-            insetRight: -4
+            insetLeft: -10,
         })),
         Plot.ruleY([0])
     ],
@@ -207,14 +206,14 @@ Plot.plot({
 
 ````js
 Plot.plot({
+    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
     y: {grid: true},
     color: {legend: true},
     marks: [
         Plot.rectY(data, Plot.binX({y: "count"}, {
             x: "DT_YEAR_COLLISION",
             fill: "TX_LIGHT_CONDITION_NL",
-            insetLeft: -4,
-            insetRight: -4
+            insetLeft: -10,
         })),
         Plot.ruleY([0])
     ],
@@ -225,14 +224,14 @@ Plot.plot({
 
 ````js
 Plot.plot({
+    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
     y: {grid: true},
     color: {legend: true},
     marks: [
         Plot.rectY(data, Plot.binX({y: "count"}, {
             x: "DT_YEAR_COLLISION",
             fill: "CD_ROAD_TYPE_NL",
-            insetLeft: -4,
-            insetRight: -4
+            insetLeft: -10,
         })),
         Plot.ruleY([0])
     ],
