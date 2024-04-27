@@ -18,21 +18,27 @@ const data = rawdata.map((d, i) => {
 ## Heatmap: Gekende ongevallen met gewonden per maand per jaar
 
 ````js
+
 Plot.plot({
+    width: 350,
+    height: 600,
     color: {legend: true, scheme: "Oranges"},
     marginTop: 0,
     aspectRatio: 1,
-    insetRight: 50,
     xscale: "band",
-    x: {type: "band", label: "Maand"},
-    y: {label: "Jaar"},
-    //title: "Gekende ongevallen met gewonden per maand per jaar",
+    x: {type: "band", label: "Jaar"},
+    y: {
+        tickFormat: Plot.formatMonth("nl", "short"), 
+        label: "Maand"},
     marks: [
         Plot.cell(
             data,
             Plot.group(
-                {fill: "count"},
-                {x: "DT_MONTH_COLLISION", y: "DT_YEAR_COLLISION", tip: true}
+                {fill: "count"}, {
+                    x: (d) => d.DT_YEAR_COLLISION, 
+                    y: (d) => d.DT_MONTH_COLLISION - 1, 
+                    tip: true
+                    }
             )
         )
     ]
@@ -53,10 +59,8 @@ Object.keys(provuniqedata).forEach((key, index) => {
     }
     units.push({group: label, label: label, freq: provuniqedata[key]})
 })
-console.log(units)
 units = units.flatMap(d => d3.range(Math.round(d.freq / 1000)).map(() => d))
 units = units.sort( (d1, d2) => d2.freq - d1.freq)
-console.log(units)
 ````
 ### 1 unit = 1000 accidents
 ````js
@@ -79,7 +83,7 @@ Plot.plot({
 })
 ````
 
-## Heatmap: Ongevallen per betrokken weggebruiker
+## Heatmap: Ongevallen per betrokken weggebruiker / obstakel
 ### logaritmische kleurschaal
 ````js
 Plot.plot({
@@ -111,19 +115,82 @@ Plot.plot({
 ## Stacked barchart: Type slachtoffer in ongevallen met gewonden
 
 ````js
+const groupedData = d3.rollup(rawdata, 
+    v => d3.rollup(v, arr => arr.length, d => d.TX_CLASS_ACCIDENTS_NL), 
+    d => d.DT_YEAR_COLLISION
+);
 
+const transformedData = Array.from(groupedData, ([year, classCounts]) => {
+  const yearData = Array.from(classCounts, ([className, count]) => ({
+    year: parseInt(year),
+    class: className,
+    count: count
+  }));
+  return yearData;
+}).flat();
+
+const distinctClasses = Array.from(new Set(transformedData.map(d => d.class)));
+
+// Define color scheme
+const colorScheme = d3.schemeCategory10; // You can use any other color scheme
+
+// Generate classColors object
+const classColors = {};
+distinctClasses.forEach((className, index) => {
+  classColors[className] = colorScheme[index % colorScheme.length];
+});
+
+// Map class names to colors
+const coloredData = transformedData.map(d => ({
+  ...d,
+  color: classColors[d.class]
+}));
+
+function legende() {
+  const padding = 20; // Padding between legend items
+  const svg = d3.create("svg")
+      .attr("viewBox", [0, 0, padding * (distinctClasses.length + 1) + distinctClasses.map(d => d.length * 7).reduce((a,b) => a + b, 0), 30])
+      .style("font", "10px sans-serif")
+      .style("user-select", "none");
+
+  const legend = svg.append("g")
+      .selectAll("g")
+      .data(distinctClasses)
+      .join("g")
+      .attr("transform", (d, i) => `translate(${padding + distinctClasses.slice(0, i).map(d => d.length * 7).reduce((a,b) => a + b, 0) + padding * i}, 0)`);
+
+  legend.append("rect")
+      .attr("x", 0)
+      .attr("y", 5)
+      .attr("width", 10)
+      .attr("height", 10)
+      .attr("fill", d => classColors[d]);
+
+  legend.append("text")
+      .attr("x", 15)
+      .attr("y", 10)
+      .attr("dy", "0.35em")
+      .text(d => d.toLowerCase());
+
+  return svg.node();
+}
+````
+
+${view(legende())}
+
+````js
 Plot.plot({
-    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
-    y: {grid: true},
-    color: {legend: true},
-    marks: [
-        Plot.rectY(data, Plot.binX({y: "count"}, {
-            x: "DT_YEAR_COLLISION",
-            fill: "TX_CLASS_ACCIDENTS_NL",
-            insetLeft: -10,
-        })),
-        Plot.ruleY([0])
-    ]
+  x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
+  y: {
+    label: "Aantal ongevallen",
+    grid: true
+  },
+  marks: [
+    Plot.ruleY([0]),
+    Plot.lineY(coloredData, {x: "year", y: "count", z: "class", stroke: "color"}),
+    Plot.dot(coloredData, { x: "year", y: "count", z: "class", fill: "color", size: 3, tip: true })
+
+  ]
 })
 ````
 
