@@ -163,12 +163,28 @@ function line_plot(value) {
     return p;
 }
 
-let accidentClass = line_plot(distinctAccidentClasses[0]);
-
 ````
-${Inputs.bind(Inputs.select(distinctAccidentClasses, {value: distinctAccidentClasses, format: (x) => x}), accidentClass)}
+
+```js
+const accidentClass = view(Inputs.select(distinctAccidentClasses, {value: distinctAccidentClasses[0]}));
+```
+
 ${view(legendeAccidentClasses(distinctAccidentClasses, classColors))}
-${view(accidentClass)}
+
+```js
+Plot.plot({
+    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
+    y: {
+        label: "Aantal ongevallen",
+        grid: true
+    },
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(coloredData.filter(d => (d.class == accidentClass)), {x: "year", y: "count", z: "class", stroke: "color"}),
+        Plot.dot(coloredData.filter(d => (d.class == accidentClass)), { x: "year", y: "count", z: "class", fill: "color", size: 3, tip: true })
+    ]
+    })
+```
 
 ## Stacked barchart: Binnen en buiten bebouwde kom
 
