@@ -2,6 +2,9 @@
 theme: light
 toc: true
 ---
+````js
+import {legendeAccidentClasses} from "./components/legends.js"
+````
 
 # Verkeersongelukken
 ---
@@ -115,84 +118,68 @@ Plot.plot({
 ## Stacked barchart: Type slachtoffer in ongevallen met gewonden
 
 ````js
-const groupedData = d3.rollup(rawdata, 
-    v => d3.rollup(v, arr => arr.length, d => d.TX_CLASS_ACCIDENTS_NL), 
+const groupedAccidentClasses = Array.from(
+  d3.rollup(
+    rawdata,
+    v => Array.from(
+      d3.rollup(v, arr => arr.length, d => d.TX_CLASS_ACCIDENTS_NL),
+      ([className, count]) => ({ class: className.toLowerCase(), count })
+    ),
     d => d.DT_YEAR_COLLISION
-);
+  ),
+  ([year, classCounts]) => classCounts.map(data => ({ year: parseInt(year), ...data }))
+).flat();
 
-const transformedData = Array.from(groupedData, ([year, classCounts]) => {
-  const yearData = Array.from(classCounts, ([className, count]) => ({
-    year: parseInt(year),
-    class: className,
-    count: count
-  }));
-  return yearData;
-}).flat();
+const distinctAccidentClasses = [...new Set(groupedAccidentClasses.map(d => d.class.toLowerCase()))];
+const colorScheme = d3.schemeCategory10;
+const classColors = Object.fromEntries(distinctAccidentClasses.map((className, index) => [className, colorScheme[index % colorScheme.length]]));
 
-const distinctClasses = Array.from(new Set(transformedData.map(d => d.class)));
+const coloredData = groupedAccidentClasses.map(d => ({ ...d, color: classColors[d.class] }));
 
-// Define color scheme
-const colorScheme = d3.schemeCategory10; // You can use any other color scheme
+function line_plot(value) {
 
-// Generate classColors object
-const classColors = {};
-distinctClasses.forEach((className, index) => {
-  classColors[className] = colorScheme[index % colorScheme.length];
-});
+    let displayedClass;
 
-// Map class names to colors
-const coloredData = transformedData.map(d => ({
-  ...d,
-  color: classColors[d.class]
-}));
+    function update(value) {
+        displayedClass = coloredData.filter(d => (d.class == value));
+        console.log(displayedClass);
+    }
 
-function legende() {
-  const padding = 20; // Padding between legend items
-  const svg = d3.create("svg")
-      .attr("viewBox", [0, 0, padding * (distinctClasses.length + 1) + distinctClasses.map(d => d.length * 7).reduce((a,b) => a + b, 0), 30])
-      .style("font", "10px sans-serif")
-      .style("user-select", "none");
+    update(value);
 
-  const legend = svg.append("g")
-      .selectAll("g")
-      .data(distinctClasses)
-      .join("g")
-      .attr("transform", (d, i) => `translate(${padding + distinctClasses.slice(0, i).map(d => d.length * 7).reduce((a,b) => a + b, 0) + padding * i}, 0)`);
+    const p = Plot.plot({
+    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
+    y: {
+        label: "Aantal ongevallen",
+        grid: true
+    },
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(displayedClass, {x: "year", y: "count", z: "class", stroke: "color"}),
+        Plot.dot(displayedClass, { x: "year", y: "count", z: "class", fill: "color", size: 3, tip: true })
+    ]
+    });
 
-  legend.append("rect")
-      .attr("x", 0)
-      .attr("y", 5)
-      .attr("width", 10)
-      .attr("height", 10)
-      .attr("fill", d => classColors[d]);
+    // Bind update function to value change
+    Object.defineProperty(p, "value", {
+        get() {
+        return value;
+        },
+        set(v) {
+        value = v;
+        update(value); // Call update function
+        }
+    });
 
-  legend.append("text")
-      .attr("x", 15)
-      .attr("y", 10)
-      .attr("dy", "0.35em")
-      .text(d => d.toLowerCase());
-
-  return svg.node();
+    return p;
 }
+
+let accidentClass = line_plot(distinctAccidentClasses[0]);
+
 ````
-
-${view(legende())}
-
-````js
-Plot.plot({
-  x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
-  y: {
-    label: "Aantal ongevallen",
-    grid: true
-  },
-  marks: [
-    Plot.ruleY([0]),
-    Plot.lineY(coloredData, {x: "year", y: "count", z: "class", stroke: "color"}),
-    Plot.dot(coloredData, { x: "year", y: "count", z: "class", fill: "color", size: 3, tip: true })
-
-  ]
-})
-````
+${Inputs.bind(Inputs.select(distinctAccidentClasses, {value: distinctAccidentClasses, format: (x) => x}), accidentClass)}
+${view(legendeAccidentClasses(distinctAccidentClasses, classColors))}
+${view(accidentClass)}
 
 ## Stacked barchart: Binnen en buiten bebouwde kom
 
