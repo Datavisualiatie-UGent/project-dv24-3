@@ -17,8 +17,11 @@ const data = rawdata.map((d, i) => {
 
 ## Heatmap: Gekende ongevallen met gewonden per maand per jaar
 
-````js
+```js
+const ongevallen_per_maand_jaar = await FileAttachment("data/ongevallen_gewonden_maand_jaar.json").json();
+```
 
+````js
 Plot.plot({
     width: 350,
     height: 600,
@@ -32,14 +35,8 @@ Plot.plot({
         label: "Maand"},
     marks: [
         Plot.cell(
-            data,
-            Plot.group(
-                {fill: "count"}, {
-                    x: (d) => d.DT_YEAR_COLLISION, 
-                    y: (d) => d.DT_MONTH_COLLISION - 1, 
-                    tip: true
-                    }
-            )
+            ongevallen_per_maand_jaar,
+            {x: "year", y: "month", fill: "value", tip: true}
         )
     ]
 })
@@ -48,19 +45,12 @@ Plot.plot({
 ## Waffle chart: Aantal ongevallen met gewonden per provincie 
 
 ````js
-const provdata = data.map((d,i) => d.TX_PROV_COLLISION_NL)
-let provuniqedata = {}
-provdata.forEach((d, i) => provuniqedata[d] = (provuniqedata[d] || 0) + 1)
-let units = [];
-Object.keys(provuniqedata).forEach((key, index) => {
-    let label = key
-    if (key == ""){
-        label = "unknown"
-    }
-    units.push({group: label, label: label, freq: provuniqedata[key]})
-})
-units = units.flatMap(d => d3.range(Math.round(d.freq / 1000)).map(() => d))
-units = units.sort( (d1, d2) => d2.freq - d1.freq)
+const ongevallen_per_provincie = await FileAttachment("data/ongevallen_per_provincie.json").json();
+
+let units = ongevallen_per_provincie
+    .map((v) => ({group: v.provincie, label: v.provincie, freq: v.value}))
+    .flatMap(d => d3.range(Math.round(d.freq / 1000)).map(() => d))
+    .sort( (d1, d2) => d2.freq - d1.freq);
 ````
 ### 1 unit = 1000 accidents
 ````js
@@ -85,6 +75,10 @@ Plot.plot({
 
 ## Heatmap: Ongevallen per betrokken weggebruiker / obstakel
 ### logaritmische kleurschaal
+```js
+const ongevallen_per_weggebruiker = await FileAttachment("data/ongevallen_per_betrokken_weggebruiker.json").json();
+```
+
 ````js
 Plot.plot({
     color: {legend: true, scheme: "Oranges", type: "log"},
@@ -101,11 +95,8 @@ Plot.plot({
     //title: "Ongevallen per betrokken bestuurders",
     marks: [
         Plot.cell(
-            data,
-            Plot.group(
-                {fill: "count"},
-                {x: "TX_ROAD_USR_TYPE1_NL", y: "TX_ROAD_USR_TYPE2_NL", tip: true}
-            )
+            ongevallen_per_weggebruiker,
+            {x: "gebruiker_1", y: "gebruiker_2", fill: "value", tip: true}
         )
     ]
 })
