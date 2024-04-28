@@ -160,17 +160,6 @@ function line_plot(value) {
     ]
     });
 
-    // Bind update function to value change
-    Object.defineProperty(p, "value", {
-        get() {
-        return value;
-        },
-        set(v) {
-        value = v;
-        update(value); // Call update function
-        }
-    });
-
     return p;
 }
 
