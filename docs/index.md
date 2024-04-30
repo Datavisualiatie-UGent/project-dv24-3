@@ -3,7 +3,9 @@ theme: light
 toc: true
 ---
 ````js
+import proj4 from "npm:proj4";
 import {legendeAccidentClasses} from "./components/legends.js"
+import {dashboard} from "./components/dashboard.js"
 ````
 
 # Verkeersongelukken
@@ -136,18 +138,25 @@ const classColors = Object.fromEntries(distinctAccidentClasses.map((className, i
 
 const coloredData = groupedAccidentClasses.map(d => ({ ...d, color: classColors[d.class] }));
 
-function line_plot(value) {
+````
 
-    let displayedClass;
+```js
+display
+```
 
-    function update(value) {
-        displayedClass = coloredData.filter(d => (d.class == value));
-        console.log(displayedClass);
-    }
+```js
+const display = view(dashboard(html`
+  <div style="display:flex">
+  <div data-region="left" style="padding-right:20px"></div>
+  <div data-region="right"></div>
+`))
+```
 
-    update(value);
-
-    const p = Plot.plot({
+```js
+const input = Inputs.checkbox(distinctAccidentClasses, {value: distinctAccidentClasses[0]});
+display('left', input, invalidation);
+const left = Generators.input(input);
+display('right', Plot.plot({
     x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
     y: {
         label: "Aantal ongevallen",
@@ -155,21 +164,20 @@ function line_plot(value) {
     },
     marks: [
         Plot.ruleY([0]),
-        Plot.lineY(displayedClass, {x: "year", y: "count", z: "class", stroke: "color"}),
-        Plot.dot(displayedClass, { x: "year", y: "count", z: "class", fill: "color", size: 3, tip: true })
+        Plot.lineY(coloredData.filter(d => (accidentClass.includes(d.class))), {x: "year", y: "count", z: "class", stroke: "color"}),
+        Plot.dot(coloredData.filter(d => (accidentClass.includes(d.class))), { x: "year", y: "count", z: "class", fill: "color", size: 3, tip: true })
     ]
-    });
+    }), invalidation);
 
-    return p;
-}
-
-````
-
-```js
-const accidentClass = view(Inputs.select(distinctAccidentClasses, {value: distinctAccidentClasses[0]}));
 ```
 
-${view(legendeAccidentClasses(distinctAccidentClasses, classColors))}
+```js
+const accidentClass = view(Inputs.checkbox(distinctAccidentClasses, {value: distinctAccidentClasses[0]}));
+```
+
+```js
+view(legendeAccidentClasses(distinctAccidentClasses, classColors))
+```
 
 ```js
 Plot.plot({
@@ -180,8 +188,8 @@ Plot.plot({
     },
     marks: [
         Plot.ruleY([0]),
-        Plot.lineY(coloredData.filter(d => (d.class == accidentClass)), {x: "year", y: "count", z: "class", stroke: "color"}),
-        Plot.dot(coloredData.filter(d => (d.class == accidentClass)), { x: "year", y: "count", z: "class", fill: "color", size: 3, tip: true })
+        Plot.lineY(coloredData.filter(d => (accidentClass.includes(d.class))), {x: "year", y: "count", z: "class", stroke: "color"}),
+        Plot.dot(coloredData.filter(d => (accidentClass.includes(d.class))), { x: "year", y: "count", z: "class", fill: "color", size: 3, tip: true })
     ]
     })
 ```
@@ -301,9 +309,6 @@ Plot.plot({
 ## Kaart: Type slachtoffer met locatie
 
 ````js
-
-import proj4 from "npm:proj4";
-
 const belgium = await FileAttachment("data/Gemeenten_Fusies.json").json()
 
 const geolocations = rawdata.map(d => ({
