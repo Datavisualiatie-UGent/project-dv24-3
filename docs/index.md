@@ -4,7 +4,7 @@ toc: true
 ---
 ````js
 import proj4 from "npm:proj4";
-import {legendeAccidentClasses} from "./components/legends.js"
+import {legend, color_mapping, add_color_to_data} from "./components/legends.js"
 ````
 
 # Verkeersongelukken
@@ -12,11 +12,6 @@ import {legendeAccidentClasses} from "./components/legends.js"
 
 ````js
 const rawdata = await FileAttachment("data/OPENDATA_MAP_2017-2022.csv").csv()
-const data = rawdata.map((d, i) => {
-    d.DT_YEAR_COLLISION = d.DT_YEAR_COLLISION;
-    d.DT_MONTH_COLLISION = parseInt(d.DT_MONTH_COLLISION);
-    return d;
-})
 ````
 
 ## Heatmap: Gekende ongevallen met gewonden per maand per jaar
@@ -107,36 +102,94 @@ Plot.plot({
 ````
 
 
-## Stacked barchart: Type slachtoffer in ongevallen met gewonden
+## Line chart: Type slachtoffer in ongevallen met gewonden
+
+```js
+const type_gewonden_ongeval = await FileAttachment("data/line_chart/type_gewonden_ongeval.json").json();
+const distinct_type_victim = [...new Set(type_gewonden_ongeval.map(d => d.class))];
+
+const bebouwde_kom_ongeval = await FileAttachment("data/line_chart/bebouwde_kom_ongeval.json").json();
+const distinct_build_area = [...new Set(bebouwde_kom_ongeval.map(d => d.area))];
+
+const kruispunt_ongeval = await FileAttachment("data/line_chart/kruispunt_ongeval.json").json();
+const distinct_crossway = [...new Set(kruispunt_ongeval.map(d => d.cross))];
+
+const weersomstandigheden_ongeval = await FileAttachment("data/line_chart/weersomstandigheden_ongeval.json").json();
+const distinct_weather = [...new Set(weersomstandigheden_ongeval.map(d => d.weather))];
+
+const wegconditie_ongeval = await FileAttachment("data/line_chart/wegconditie_ongeval.json").json();
+const distinct_cond = [...new Set(wegconditie_ongeval.map(d => d.cond))];
+
+const lichtgesteldheid_ongeval = await FileAttachment("data/line_chart/lichtgesteldheid_ongeval.json").json();
+const distinct_light = [...new Set(lichtgesteldheid_ongeval.map(d => d.light))];
+
+const type_weg_ongeval = await FileAttachment("data/line_chart/type_weg_ongeval.json").json();
+const distinct_road = [...new Set(type_weg_ongeval.map(d => d.road))];
+```
 
 ````js
-const groupedAccidentClasses = Array.from(
-  d3.rollup(
-    rawdata,
-    v => Array.from(
-      d3.rollup(v, arr => arr.length, d => d.TX_CLASS_ACCIDENTS_NL),
-      ([className, count]) => ({ class: className.toLowerCase(), count })
-    ),
-    d => d.DT_YEAR_COLLISION
-  ),
-  ([year, classCounts]) => classCounts.map(data => ({ year: parseInt(year), ...data }))
-).flat();
+let colorScheme = [...new Array(20)].map(() => d3.interpolateSpectral(Math.random())).map(d => d3.color(d).formatHex());
 
-const distinctAccidentClasses = [...new Set(groupedAccidentClasses.map(d => d.class.toLowerCase()))];
-const colorScheme = d3.schemeCategory10;
-const classColors = Object.fromEntries(distinctAccidentClasses.map((className, index) => [className, colorScheme[index % colorScheme.length]]));
+const type_victim_colors_mapped = color_mapping(distinct_type_victim, colorScheme);
+const type_victim_data = add_color_to_data(type_gewonden_ongeval, type_victim_colors_mapped, "class");
 
-const coloredData = groupedAccidentClasses.map(d => ({ ...d, color: classColors[d.class] }));
+const build_area_colors_mapped = color_mapping(distinct_build_area, colorScheme);
+const build_area_data = add_color_to_data(bebouwde_kom_ongeval, build_area_colors_mapped, "area");
 
-const input = Inputs.checkbox(distinctAccidentClasses, {value: distinctAccidentClasses[0]});
-const arrayInput = Generators.input(input);
+const crossway_colors_mapped = color_mapping(distinct_crossway, colorScheme);
+const crossway_data = add_color_to_data(kruispunt_ongeval, crossway_colors_mapped, "cross");
+
+const weather_colors_mapped = color_mapping(distinct_weather, colorScheme);
+const weather_data = add_color_to_data(weersomstandigheden_ongeval, weather_colors_mapped, "weather");
+
+const cond_colors_mapped = color_mapping(distinct_cond, colorScheme);
+const cond_data = add_color_to_data(wegconditie_ongeval, cond_colors_mapped, "cond");
+
+const light_colors_mapped = color_mapping(distinct_light, colorScheme);
+const light_data = add_color_to_data(lichtgesteldheid_ongeval, light_colors_mapped, "light");
+
+const road_colors_mapped = color_mapping(distinct_road, colorScheme);
+const road_data = add_color_to_data(type_weg_ongeval, road_colors_mapped, "road");
+
+const legend_selector = {
+    "Type gewonde" : color_mapping(distinct_type_victim, colorScheme),
+    "Bebouwde kom" : color_mapping(distinct_build_area, colorScheme),
+    "Kruispunt" : color_mapping(distinct_crossway, colorScheme),
+    "Weersomstandigheden" : color_mapping(distinct_weather, colorScheme),
+    "Conditie van de weg" : color_mapping(distinct_cond, colorScheme),
+    "Lichtgestelheid" : color_mapping(distinct_light, colorScheme),
+    "Type weg" : color_mapping(distinct_road, colorScheme),
+    };
+const selector = {
+    "Type gewonde": {"key" : "class", "data": type_victim_data, "distinct": distinct_type_victim},
+    "Bebouwde kom": {"key" : "area", "data": build_area_data, "distinct" : distinct_build_area},
+    "Kruispunt" : {"key" : "cross", "data" : crossway_data, "distinct" : distinct_crossway},
+    "Weersomstandigheden" : {"key" : "weather", "data": weather_data, "distinct" : distinct_weather},
+    "Conditie van de weg" : {"key" : "cond", "data" : cond_data, "distinct" : distinct_cond},
+    "Lichtgestelheid" : {"key" : "light", "data" : light_data, "distinct" : distinct_light},
+    "Type weg" : {"key" : "road", "data" : road_data, "distinct" : distinct_road}
+    }
+
+````
+
+```js
+const select_input = Inputs.select(["Type gewonde", "Bebouwde kom", "Kruispunt", "Weersomstandigheden", "Conditie van de weg", "Lichtgestelheid", "Type weg"], {value:"Type gewonde", width: 120});
+const value_select = Generators.input(select_input);
+```
+
+````js
+const checkbox_input = Inputs.checkbox(selector[value_select].distinct, {value: selector[value_select].distinct});
+const values_checkbox = Generators.input(checkbox_input);
 ````
 
 <div style="display:flex">
-  <div style="flex: 1; padding-right: 20px;">
-        ${view(input)}
+  <div style="flex: 0 0 20%; padding-right: 20px;">
+    ${view(select_input)}
+    <div style="padding-top: 20px;"></div>
+    ${view(checkbox_input)}
   </div>
   <div> 
+    ${legend(legend_selector[value_select])}
     ${Plot.plot({
     x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
     y: {
@@ -145,126 +198,13 @@ const arrayInput = Generators.input(input);
     },
     marks: [
         Plot.ruleY([0]),
-        Plot.lineY(coloredData.filter(d => (arrayInput.includes(d.class))), {x: "year", y: "count", z: "class", stroke: "color"}),
-        Plot.dot(coloredData.filter(d => (arrayInput.includes(d.class))), { x: "year", y: "count", z: "class", fill: "color", size: 3, tip: true })
+        Plot.lineY(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), {x: "year", y: "count", z: selector[value_select].key, stroke: "color"}),
+        Plot.dot(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), { x: "year", y: "count", z: selector[value_select].key, fill: "color", size: 3, tip: true })
     ]
     })}
   </div>
-  
 </div>
 
-
-## Stacked barchart: Binnen en buiten bebouwde kom
-
-````js
-Plot.plot({
-    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
-    y: {grid: true},
-    color: {legend: true},
-    marks: [
-        Plot.rectY(data, Plot.binX({y: "count"}, {
-            x: "DT_YEAR_COLLISION",
-            fill: "TX_BUILD_UP_AREA_NL",
-            insetLeft: -10,
-        })),
-        Plot.ruleY([0])
-    ],
-    xAxis: {tickFormat: d3.format("d")}
-})
-````
-
-## Stacked barchart: Ongevallen op kruispunt en niet op kruispunt
-
-````js
-Plot.plot({
-    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
-    y: {grid: true},
-    color: {legend: true},
-    marks: [
-        Plot.rectY(data, Plot.binX({y: "count"}, {
-            x: "DT_YEAR_COLLISION",
-            fill: "TX_CROSSWAY_NL",
-            insetLeft: -10,
-        })),
-        Plot.ruleY([0])
-    ],
-    xAxis: {tickFormat: d3.format("d")}
-})
-````
-## Stacked barchart: Weersomstandigheden bij ongevallen
-
-````js
-Plot.plot({
-    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
-    y: {grid: true},
-    color: {legend: true},
-    marks: [
-        Plot.rectY(data, Plot.binX({y: "count"}, {
-            x: "DT_YEAR_COLLISION",
-            fill: "TX_WEATHER_NL",
-            insetLeft: -10,
-        })),
-        Plot.ruleY([0])
-    ],
-    xAxis: {tickFormat: d3.format("d")}
-})
-````
-
-## Stacked barchart: Wegconditie bij ongevallen
-
-````js
-Plot.plot({
-    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
-    y: {grid: true},
-    color: {legend: true},
-    marks: [
-        Plot.rectY(data, Plot.binX({y: "count"}, {
-            x: "DT_YEAR_COLLISION",
-            fill: "TX_ROAD_CONDITION_NL",
-            insetLeft: -10,
-        })),
-        Plot.ruleY([0])
-    ],
-    xAxis: {tickFormat: d3.format("d")}
-})
-````
-
-## Stacked barchart: Lichtgesteldheid bij ongevallen
-
-````js
-Plot.plot({
-    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
-    y: {grid: true},
-    color: {legend: true},
-    marks: [
-        Plot.rectY(data, Plot.binX({y: "count"}, {
-            x: "DT_YEAR_COLLISION",
-            fill: "TX_LIGHT_CONDITION_NL",
-            insetLeft: -10,
-        })),
-        Plot.ruleY([0])
-    ],
-    xAxis: {tickFormat: d3.format("d")}
-})
-````
-## Stacked barchart: Type weg bij ongevallen
-
-````js
-Plot.plot({
-    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
-    y: {grid: true},
-    color: {legend: true},
-    marks: [
-        Plot.rectY(data, Plot.binX({y: "count"}, {
-            x: "DT_YEAR_COLLISION",
-            fill: "CD_ROAD_TYPE_NL",
-            insetLeft: -10,
-        })),
-        Plot.ruleY([0])
-    ],
-    xAxis: {tickFormat: d3.format("d")}
-})
-````
 
 ## Kaart: Type slachtoffer met locatie
 
