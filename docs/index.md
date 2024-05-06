@@ -208,7 +208,7 @@ const values_checkbox = Generators.input(checkbox_input);
 
 ## Kaart: Type slachtoffer met locatie
 
-````js
+```js
 const belgium = await FileAttachment("data/Gemeenten_Fusies.json").json()
 
 const geolocations = rawdata.map(d => ({
@@ -216,126 +216,95 @@ const geolocations = rawdata.map(d => ({
     y: parseFloat(d.MS_Y_COORD),
     type: d.TX_CLASS_ACCIDENTS_NL.toLowerCase()
 })).filter(d => isFinite(d.x) && isFinite(d.y));
+```
 
+```js
 proj4.defs("EPSG:31370", "+proj=lcc +lat_0=90 +lon_0=4.36748666666667 +lat_1=51.1666672333333 +lat_2=49.8333339 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,-0.3366,0.457,-1.8422,-1.2747 +units=m +no_defs +type=crs");
-
-// Convert all geolocations to geographic coordinates (Lambert 1972 projection)
 const geographic_coordinates = geolocations.map(d => {
     const transformedCoordinates = proj4('EPSG:31370', 'EPSG:4326', [d.x, d.y]);
     return { coordinates: transformedCoordinates, type: d.type };
     });
+```
 
-const distinct_types = [...new Set(geolocations.map(d => d.type))];
-
-const coordinates_by_type = new Object();
-
-distinct_types.forEach(type => {
-    const coordinates = geographic_coordinates.filter(d => d.type === type).map(d => ({ coordinates: d.coordinates, type:d.type }));
-    coordinates_by_type[type] = coordinates;
-});
-
-
-function chart(value) {
-    const width = 800;
-    const height = 600;
-
-    // Create a new SVG element
-    const svg = d3.create("svg")
-        .attr("viewBox", [0, 0, width, height]);
-
-    // Define the Mercator projection
-    const projection = d3.geoMercator().fitSize([width, height], topojson.feature(belgium, belgium.objects.Gemeenten));
-    
-    // Create a path generator
-    const path = d3.geoPath().projection(projection);
-    
-    svg.append("path")
-        .datum(topojson.feature(belgium, belgium.objects.Gemeenten))
-        .attr("d", path)
-        .attr("fill", "lightgray")
-        .attr("stroke", "white");
-
-    // Define a scale for colors
-    const colorScale = d3.scaleOrdinal()
+```js
+const colorScale = d3.scaleOrdinal()
         .domain(geographic_coordinates.map(d => d.type))
         .range(d3.schemeCategory10);
+```
 
-    // Define the legend item width and height
-    const legendItemWidth = 30;
-    const legendItemHeight = 30;
-      
-      // Create a legend for the colors
-    const legend = svg.append("g")
-        .attr("class", "legend")
-        .attr("transform", "translate(20," + (height - (colorScale.domain().length * legendItemHeight)) + ")");
+```js
+function map(value) {
+  const width = 1000;
+  const height = 800;
+  const r = 1.5;
+  const projection = d3.geoMercator().fitSize([width, height], topojson.feature(belgium, belgium.objects.Gemeenten));
+  const canvas = d3.create("canvas")
+      .attr("width", width)
+      .attr("height", height);
+  const context = canvas.node().getContext('2d');
+  const path = d3.geoPath(null, context).projection(projection);
+
+  d3.select(context.canvas).call(d3.zoom()
+      .scaleExtent([1, 8])
+      .on("zoom", ({transform}) => zoomed(transform)));
+
+  function zoomed(transform) {
+    context.save();
+    context.clearRect(0, 0, width, height);
+    context.translate(transform.x, transform.y);
+    context.scale(transform.k, transform.k);
+    context.canvas.style.maxWidth = "100%";
+    context.lineJoin = "round";
+    context.lineCap = "round";
+
+    context.beginPath();
+    path(topojson.feature(belgium, belgium.objects.Gemeenten));
+    context.fillStyle = "lightgray";
+    context.fill();
+
+    context.beginPath();
+    path(topojson.feature(belgium, belgium.objects.Gemeenten, (a, b) => a !== b ));
+    context.lineWidth = 0.5;
+    context.strokeStyle = "white";
+    context.stroke();
     
-    // Add rectangles and labels for each year in the legend
-    legend.selectAll("rect")
-        .data(colorScale.domain())
-        .enter().append("rect")
-        .attr("x", 0)
-        .attr("y", (d, i) => i * legendItemHeight)
-        .attr("width", legendItemWidth)
-        .attr("height", legendItemHeight)
-        .attr("fill", colorScale);
+    // Filter geographic coordinates based on the provided value
+    let filteredCoordinates = geographic_coordinates.filter(d => value.includes(d.type));
     
-    legend.selectAll("text")
-        .data(colorScale.domain())
-        .enter().append("text")
-        .attr("x", legendItemWidth + 5)
-        .attr("y", (d, i) => i * legendItemHeight + legendItemHeight / 2)
-        .attr("dy", "0.35em")
-        .text(d => d)
-        .attr("fill", "black")
-        .style("font-size", "16px")
-        .style("font-family", "Arial");
-
-    // Update function
-    function update(value) {
-        const displayed = value.reduce((result, key) => {
-            if (coordinates_by_type[key]) {
-                result = result.concat(coordinates_by_type[key]);
-            }
-            return result;
-        }, []);
-
-        svg.selectAll("circle") // Select all circles
-        .data(displayed, d => d.type) // Bind data filtered by checkbox values
-        .join(
-            enter => enter.append("circle") // Append new circles for entered data
-            .attr("cx", d => projection(d.coordinates)[0])
-            .attr("cy", d => projection(d.coordinates)[1])
-            .attr("r", 1)
-            .attr("fill", d => colorScale(d.type))
-            .attr("class", d => "type-" + d.type),
-            exit => exit.remove() // Remove circles for exited data
-        );
+    // Draw filtered coordinates
+    for (const obj of filteredCoordinates.reverse()) {
+      context.beginPath();
+      context.fillStyle = colorScale(obj.type);
+      const [x, y] = obj.coordinates.values();
+      const [proj_x, proj_y] = projection([x, y]);
+      context.moveTo(proj_x + r, proj_y);
+      context.arc(proj_x, proj_y, r, 0, 2 * Math.PI);
+      context.fill();
+    }
+    context.restore();
   }
 
-  // Initialize with all types displayed
-  update(value);
-
-  // Bind update function to value change
-  Object.defineProperty(svg.node(), "value", {
-    get() {
-      return value;
-    },
-    set(v) {
-      value = v;
-      update(value); // Call update function
-    }
-  });
+  zoomed(d3.zoomIdentity);
   
-  
-    // Display the SVG
-    return svg.node();
+  return context.canvas;
 }
+```
 
-let type_victim = chart(distinct_types);
+```js
+const distinct_types = [...new Set(geolocations.map(d => d.type))];
+```
 
-````
-${Inputs.bind(Inputs.checkbox(distinct_types, {value: distinct_types, format: (x) => x}), type_victim)}
-${view(type_victim)}
+```js
+const input = view(Inputs.checkbox(distinct_types, {
+  description: 'Choose the type to display on the map',
+  value: distinct_types
+}));
+```
+
+```js
+view(map(input));
+```
+
 
 ## TODO: Correlatiematrix?
 
