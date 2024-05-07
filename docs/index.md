@@ -20,6 +20,15 @@ const rawdata = await FileAttachment("data/OPENDATA_MAP_2017-2022.csv").csv()
 const ongevallen_per_maand_jaar = await FileAttachment("data/ongevallen_gewonden_maand_jaar.json").json();
 ```
 
+Onderstaande grafiek toont het aantal ongevallen per maand doorheen de jaren.
+Hierbij hebben we gekozen voor een heatmap om de relatieve frequenties van
+ongevallen in verschillende periodes in één oogopslag te kunnen vergelijken.
+
+Interessant hier is dat 2020 beduidend minder ongevallen heeft dan andere
+jaren, met april 2020 veruit het minste aantal ongevallen. Dit kan natuurlijk
+verklaard worden door de Covid-19 pandemie die in 2020 de wereld, en bijgevolg
+het verkeer, abrupt stil legde.
+
 ````js
 Plot.plot({
     width: 350,
@@ -42,6 +51,9 @@ Plot.plot({
 ````
 
 ## Waffle chart: Aantal ongevallen met gewonden per provincie 
+
+Hier visualiseren we hoe het totaal aantal ongevallen verdeeld is onder de
+verschillende provincies.
 
 ````js
 const ongevallen_per_provincie = await FileAttachment("data/ongevallen_per_provincie.json").json();
@@ -73,7 +85,18 @@ Plot.plot({
 ````
 
 ## Heatmap: Ongevallen per betrokken weggebruiker / obstakel
+
+De dataset bevat voor elk ongeval ook informatie over de twee betrokken
+partijen. Met onderstaande heatmap visualiseren we welke combinaties van
+partijen er het vaakst voorkomen in de dataset.
+
+Hier zien we dat de personenwagen veruit de grootste partij is, gecombineerd
+met een andere personenwagen, een fietser, of een hindernis. Dit laatste
+betekent dat de personenwagen niet tegen een ander voertuig is gereden, maar
+tegen een object of gebouw.
+
 ### logaritmische kleurschaal
+
 ```js
 const ongevallen_per_weggebruiker = await FileAttachment("data/ongevallen_per_betrokken_weggebruiker.json").json();
 ```
@@ -207,6 +230,11 @@ const values_checkbox = Generators.input(checkbox_input);
 
 
 ## Kaart: Type slachtoffer met locatie
+
+Hier tonen we op een kaart alle locaties waar er ongevallen zijn gebeurd met
+gewonden. Aangezien personenwagens de meeste ongevallen veroorzaken is het niet
+onverwacht dat de datapunten een vrij gedetailleerde kaart vormen van het
+Belgisch wegennet.
 
 ````js
 const belgium = await FileAttachment("data/Gemeenten_Fusies.json").json()
