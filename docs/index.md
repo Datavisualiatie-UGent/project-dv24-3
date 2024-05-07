@@ -210,25 +210,24 @@ const values_checkbox = Generators.input(checkbox_input);
 
 ```js
 const belgium = await FileAttachment("data/Gemeenten_Fusies.json").json()
-
-const geolocations = rawdata.map(d => ({
-    x: parseFloat(d.MS_X_COORD),
-    y: parseFloat(d.MS_Y_COORD),
-    type: d.TX_CLASS_ACCIDENTS_NL.toLowerCase()
-})).filter(d => isFinite(d.x) && isFinite(d.y));
+const coordinates = await FileAttachment("data/coordinaten.json").json()
 ```
 
 ```js
 proj4.defs("EPSG:31370", "+proj=lcc +lat_0=90 +lon_0=4.36748666666667 +lat_1=51.1666672333333 +lat_2=49.8333339 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,-0.3366,0.457,-1.8422,-1.2747 +units=m +no_defs +type=crs");
-const geographic_coordinates = geolocations.map(d => {
-    const transformedCoordinates = proj4('EPSG:31370', 'EPSG:4326', [d.x, d.y]);
-    return { coordinates: transformedCoordinates, type: d.type };
+
+for (const type of coordinates.distinct_types) {
+    coordinates.coordinates[type] = coordinates.coordinates[type].map(d => {
+        const transformed = proj4('EPSG:31370', 'EPSG:4326', [d.x, d.y]);
+
+        return {x: transformed[0], y: transformed[1]};
     });
+}
 ```
 
 ```js
 const colorScale = d3.scaleOrdinal()
-        .domain(geographic_coordinates.map(d => d.type))
+        .domain(coordinates.distinct_types)
         .range(d3.schemeCategory10);
 ```
 
@@ -267,37 +266,33 @@ function map(value) {
     context.lineWidth = 0.5;
     context.strokeStyle = "white";
     context.stroke();
-    
-    // Filter geographic coordinates based on the provided value
-    let filteredCoordinates = geographic_coordinates.filter(d => value.includes(d.type));
-    
-    // Draw filtered coordinates
-    for (const obj of filteredCoordinates.reverse()) {
-      context.beginPath();
-      context.fillStyle = colorScale(obj.type);
-      const [x, y] = obj.coordinates.values();
-      const [proj_x, proj_y] = projection([x, y]);
-      context.moveTo(proj_x + r, proj_y);
-      context.arc(proj_x, proj_y, r, 0, 2 * Math.PI);
-      context.fill();
+
+    for (const type of coordinates.distinct_types) {
+        if (value.includes(type)) {
+            for (const obj of coordinates.coordinates[type]) {
+                context.beginPath();
+                context.fillStyle = colorScale(type);
+                const [proj_x, proj_y] = projection([obj.x, obj.y]);
+                context.moveTo(proj_x + r, proj_y);
+                context.arc(proj_x, proj_y, r, 0, 2 * Math.PI);
+                context.fill();
+            }
+        }
     }
+    
     context.restore();
   }
 
   zoomed(d3.zoomIdentity);
-  
+
   return context.canvas;
 }
 ```
 
 ```js
-const distinct_types = [...new Set(geolocations.map(d => d.type))];
-```
-
-```js
-const input = view(Inputs.checkbox(distinct_types, {
+const input = view(Inputs.checkbox(coordinates.distinct_types, {
   description: 'Choose the type to display on the map',
-  value: distinct_types
+  value: coordinates.distinct_types
 }));
 ```
 
