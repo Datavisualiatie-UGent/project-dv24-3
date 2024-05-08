@@ -57,9 +57,10 @@ let units = ongevallen_per_provincie
     .flatMap(d => d3.range(Math.round(d.freq / 1000)).map(() => d))
     .sort( (d1, d2) => d2.freq - d1.freq);
 ````
-### 1 unit = 1000 accidents
-````js
-Plot.plot({
+
+<div style="display:flex; height: 400px">
+  <div style="flex: 0 0 60%">
+    ${Plot.plot({
     aspectRatio: 1,
     insetRight: 50,
   marks: [
@@ -74,9 +75,14 @@ Plot.plot({
   ],
   x: { axis: null },
   y: { axis: null },
-  color: { scheme: "Sinebow", legend: true}
-})
-````
+  color: { values: colorScheme }
+})}
+  </div>
+  <div style="flex: 0 0 20%">
+  <h3>1 unit = 1000 accidents</h3>
+    ${legend(color_mapping([...new Set(ongevallen_per_provincie.map(d => d.provincie))], colorScheme))}
+  </div>
+</div>
 
 ## Heatmap: Ongevallen per betrokken weggebruiker / obstakel
 ### logaritmische kleurschaal
@@ -84,15 +90,16 @@ Plot.plot({
 const ongevallen_per_weggebruiker = await FileAttachment("data/ongevallen_per_betrokken_weggebruiker.json").json();
 ```
 
-````js
-Plot.plot({
+<div>
+${Plot.plot({
     color: {legend: true, scheme: "Oranges", type: "log"},
-    aspectRatio: 1.4,
+    aspectRatio: 2.5,
     marginTop: 0,
-    marginLeft: 200,
+    marginLeft: 300,
     marginBottom: 120,
+    marginRight: 100,
     xscale: {type: "band"},
-    x: {type: "band", label: "Weggebruiker 1", tickRotate: 55},
+    x: {type: "band", label: "Weggebruiker 1", tickRotate: 45},
     y: {label: "Weggebruiker 2"},
     style: {
         fontSize: 12,
@@ -104,8 +111,8 @@ Plot.plot({
             {x: "gebruiker_1", y: "gebruiker_2", fill: "value", tip: true}
         )
     ]
-})
-````
+})}
+</div>
 
 
 ## Line chart: Type slachtoffer in ongevallen met gewonden
@@ -186,7 +193,7 @@ const checkbox_input = Inputs.checkbox(selector[value_select].distinct, {value: 
 const values_checkbox = Generators.input(checkbox_input);
 ````
 
-<div style="display:flex">
+<div style="display:flex; height: 500px; padding-top: 20px">
   <div style="flex: 0 0 20%; padding-right: 20px;">
     ${view(select_input)}
     <div style="padding-top: 20px;"></div>
@@ -206,7 +213,7 @@ const values_checkbox = Generators.input(checkbox_input);
       ]
     })}
   </div>
-  <div style="flex: 0 0 20%; padding-left: 20px;">
+  <div style="flex: 0 0 20%; padding-left: 20px; padding-top: 20px">
     ${legend(legend_selector[value_select])}
   </div>
 </div>
