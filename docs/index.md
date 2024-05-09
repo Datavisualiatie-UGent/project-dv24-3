@@ -14,6 +14,12 @@ import {legend, color_mapping, add_color_to_data} from "./components/legends.js"
 
 ```js
 const ongevallen_per_maand_jaar = await FileAttachment("data/ongevallen_gewonden_maand_jaar.json").json();
+
+const months = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+
+const colorScheme = [
+'#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'
+];
 ```
 
 ````js
@@ -24,9 +30,9 @@ Plot.plot({
     marginTop: 0,
     aspectRatio: 1,
     xscale: "band",
-    x: {type: "band", label: "Jaar"},
+    x: {type: "band", label: "Jaar", tickFormat: ""},
     y: {
-        tickFormat: Plot.formatMonth("nl", "short"), 
+        domain: months,
         label: "Maand"},
     marks: [
         Plot.cell(
@@ -47,9 +53,10 @@ let units = ongevallen_per_provincie
     .flatMap(d => d3.range(Math.round(d.freq / 1000)).map(() => d))
     .sort( (d1, d2) => d2.freq - d1.freq);
 ````
-### 1 unit = 1000 accidents
-````js
-Plot.plot({
+
+<div style="display:flex; height: 400px">
+  <div style="flex: 0 0 60%">
+    ${Plot.plot({
     aspectRatio: 1,
     insetRight: 50,
   marks: [
@@ -64,9 +71,14 @@ Plot.plot({
   ],
   x: { axis: null },
   y: { axis: null },
-  color: { scheme: "Sinebow", legend: true}
-})
-````
+  color: { values: colorScheme }
+})}
+  </div>
+  <div style="flex: 0 0 20%">
+  <h3>1 unit = 1000 accidents</h3>
+    ${legend(color_mapping([...new Set(ongevallen_per_provincie.map(d => d.provincie))], colorScheme))}
+  </div>
+</div>
 
 ## Heatmap: Ongevallen per betrokken weggebruiker / obstakel
 ### logaritmische kleurschaal
@@ -74,15 +86,16 @@ Plot.plot({
 const ongevallen_per_weggebruiker = await FileAttachment("data/ongevallen_per_betrokken_weggebruiker.json").json();
 ```
 
-````js
-Plot.plot({
+<div>
+${Plot.plot({
     color: {legend: true, scheme: "Oranges", type: "log"},
-    aspectRatio: 1.4,
+    aspectRatio: 2.5,
     marginTop: 0,
-    marginLeft: 200,
+    marginLeft: 300,
     marginBottom: 120,
+    marginRight: 100,
     xscale: {type: "band"},
-    x: {type: "band", label: "Weggebruiker 1", tickRotate: 55},
+    x: {type: "band", label: "Weggebruiker 1", tickRotate: 45},
     y: {label: "Weggebruiker 2"},
     style: {
         fontSize: 12,
@@ -94,8 +107,8 @@ Plot.plot({
             {x: "gebruiker_1", y: "gebruiker_2", fill: "value", tip: true}
         )
     ]
-})
-````
+})}
+</div>
 
 
 ## Line chart: Type slachtoffer in ongevallen met gewonden
@@ -124,8 +137,6 @@ const distinct_road = [...new Set(type_weg_ongeval.map(d => d.road))];
 ```
 
 ````js
-let colorScheme = [...new Array(20)].map(() => d3.interpolateSpectral(Math.random())).map(d => d3.color(d).formatHex());
-
 const type_victim_colors_mapped = color_mapping(distinct_type_victim, colorScheme);
 const type_victim_data = add_color_to_data(type_gewonden_ongeval, type_victim_colors_mapped, "class");
 
@@ -157,13 +168,13 @@ const legend_selector = {
     "Type weg" : color_mapping(distinct_road, colorScheme),
     };
 const selector = {
-    "Type gewonde": {"key" : "class", "data": type_victim_data, "distinct": distinct_type_victim},
-    "Bebouwde kom": {"key" : "area", "data": build_area_data, "distinct" : distinct_build_area},
-    "Kruispunt" : {"key" : "cross", "data" : crossway_data, "distinct" : distinct_crossway},
-    "Weersomstandigheden" : {"key" : "weather", "data": weather_data, "distinct" : distinct_weather},
-    "Conditie van de weg" : {"key" : "cond", "data" : cond_data, "distinct" : distinct_cond},
-    "Lichtgestelheid" : {"key" : "light", "data" : light_data, "distinct" : distinct_light},
-    "Type weg" : {"key" : "road", "data" : road_data, "distinct" : distinct_road}
+    "Type gewonde": {"key" : "class", "data": type_victim_data, "distinct": distinct_type_victim, "default": distinct_type_victim},
+    "Bebouwde kom": {"key" : "area", "data": build_area_data, "distinct" : distinct_build_area, "default": distinct_build_area},
+    "Kruispunt" : {"key" : "cross", "data" : crossway_data, "distinct" : distinct_crossway, "default": distinct_crossway},
+    "Weersomstandigheden" : {"key" : "weather", "data": weather_data, "distinct" : distinct_weather, "default": distinct_weather.filter(v => { return !["normaal", "onbekend", "regenval"].includes(v); })},
+    "Conditie van de weg" : {"key" : "cond", "data" : cond_data, "distinct" : distinct_cond, "default": distinct_cond.filter(v => { return !["droog"].includes(v); })},
+    "Lichtgestelheid" : {"key" : "light", "data" : light_data, "distinct" : distinct_light, "default": distinct_light.filter(v => { return !["dag", "nacht, verlichting aanwezig en ontstoken"].includes(v); })},
+    "Type weg" : {"key" : "road", "data" : road_data, "distinct" : distinct_road, "default": distinct_road}
     }
 
 ````
@@ -174,32 +185,35 @@ const value_select = Generators.input(select_input);
 ```
 
 ````js
-const checkbox_input = Inputs.checkbox(selector[value_select].distinct, {value: selector[value_select].distinct});
+const checkbox_input = Inputs.checkbox(selector[value_select].distinct, {value: selector[value_select].default});
 const values_checkbox = Generators.input(checkbox_input);
 ````
 
-<div style="display:flex">
+<div style="display:flex; height: 500px; padding-top: 20px">
   <div style="flex: 0 0 20%; padding-right: 20px;">
     ${view(select_input)}
     <div style="padding-top: 20px;"></div>
     ${view(checkbox_input)}
   </div>
-  <div> 
-    ${legend(legend_selector[value_select])}
+  <div style="flex: 1;">
     ${Plot.plot({
-    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
-    y: {
-        label: "Aantal ongevallen",
-        grid: true
-    },
-    marks: [
-        Plot.ruleY([0]),
-        Plot.lineY(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), {x: "year", y: "count", z: selector[value_select].key, stroke: "color"}),
-        Plot.dot(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), { x: "year", y: "count", z: selector[value_select].key, fill: "color", size: 3, tip: true })
-    ]
+      x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
+      y: {
+          label: "Aantal ongevallen",
+          grid: true
+      },
+      marks: [
+          Plot.ruleY([0]),
+          Plot.lineY(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), {x: "year", y: "count", z: selector[value_select].key, stroke: "color"}),
+          Plot.dot(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), { x: "year", y: "count", z: selector[value_select].key, fill: "color", size: 3, tip: true })
+      ]
     })}
   </div>
+  <div style="flex: 0 0 20%; padding-left: 20px; padding-top: 20px">
+    ${legend(legend_selector[value_select])}
+  </div>
 </div>
+
 
 
 ## Kaart: Type slachtoffer met locatie

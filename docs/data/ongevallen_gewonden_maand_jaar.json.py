@@ -3,6 +3,7 @@ import json
 import sys
 
 ongevallen = {}
+months = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
 
 with open("docs/data/OPENDATA_MAP_2017-2022.csv", newline='') as f:
     csv_reader = csv.DictReader(f, delimiter=',', quotechar='"')
@@ -13,5 +14,5 @@ with open("docs/data/OPENDATA_MAP_2017-2022.csv", newline='') as f:
 
         ongevallen[key] = ongevallen.get(key, 0) + 1
 
-ongevallen_json = list(map(lambda kv: {"year": kv[0][0], "month": kv[0][1], "value": kv[1]}, ongevallen.items()))
+ongevallen_json = list(map(lambda kv: {"year": kv[0][0], "month": months[kv[0][1]], "month_num": kv[0][1], "value": kv[1]}, ongevallen.items()))
 json.dump(ongevallen_json, sys.stdout)
