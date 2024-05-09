@@ -10,10 +10,6 @@ import {legend, color_mapping, add_color_to_data} from "./components/legends.js"
 # Verkeersongelukken
 ---
 
-````js
-const rawdata = await FileAttachment("data/OPENDATA_MAP_2017-2022.csv").csv()
-````
-
 ## Heatmap: Gekende ongevallen met gewonden per maand per jaar
 
 ```js
@@ -303,3 +299,28 @@ view(map(input));
 
 ## TODO: Correlatiematrix?
 
+```js
+const correlaties = await FileAttachment("data/correlaties.json").json();
+```
+
+````js
+Plot.plot({
+    color: {legend: true, scheme: "Oranges"},
+    aspectRatio: 1.4,
+    marginTop: 0,
+    marginLeft: 200,
+    marginBottom: 120,
+    xscale: {type: "band"},
+    x: {type: "band", label: "Attribuut 1", tickRotate: 55},
+    y: {label: "Attribuut 2"},
+    style: {
+        fontSize: 12,
+    },
+    marks: [
+        Plot.cell(
+            correlaties,
+            {x: "column_1", y: "column_2", fill: "value", tip: true}
+        )
+    ]
+})
+````
