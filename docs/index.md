@@ -10,9 +10,37 @@ import {legend, color_mapping, add_color_to_data} from "./components/legends.js"
 # Verkeersongelukken
 ---
 
-````js
+
+```js
+const ongevallen_per_jaar = await FileAttachment("data/ongevallen_gewonden_jaar.json").json();
+```
+
+```js
+Plot.plot({
+    color: {scheme: "Blues"},
+    y: {grid: true, domain: [0, 43000], label: "accidents"},
+    title: "Ongevallen per jaar",
+    marginTop: 0,
+    insetRight: 0,
+    x: {tickFormat: ""},
+    marks: [
+        Plot.barY(
+            ongevallen_per_jaar,
+            {x: "year", y:"value"}
+        ),
+        Plot.ruleY([0])
+    ]
+})
+```
+
+
+
+```js
 const rawdata = await FileAttachment("data/OPENDATA_MAP_2017-2022.csv").csv()
-````
+```
+
+
+
 
 ## Heatmap: Gekende ongevallen met gewonden per maand per jaar
 
@@ -37,7 +65,7 @@ Plot.plot({
     marginTop: 0,
     aspectRatio: 1,
     xscale: "band",
-    x: {type: "band", label: "Jaar"},
+    x: {type: "band", label: "Jaar", tickFormat: ""},
     y: {
         tickFormat: Plot.formatMonth("nl", "short"), 
         label: "Maand"},
