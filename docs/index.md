@@ -15,18 +15,27 @@ import {legend, color_mapping, add_color_to_data} from "./components/legends.js"
 const ongevallen_per_jaar = await FileAttachment("data/ongevallen_gewonden_jaar.json").json();
 ```
 
+Jammer genoeg zijn er elk jaar nog veel ongevallen. Het statistiekbureau van België StatBel biedt een [dataset](https://statbel.fgov.be/nl/open-data/geolocalisatie-van-de-verkeersongevallen-2017-2022)
+aan waarin verkeersongevallen opgelijst staan van 2017 tot 2022. De dataset is gebaseerd op ongevallen geregistreerd door federale politie, dus het is mogelijk dat sommige ongevallen niet in deze dataset vervat zitten.
+Het doel van deze visualisatie is meer inzicht creëren in de data, en aantonen waar eventueel veiligere situaties moeten voorzien worden.
+
+
+Een eerste duidelijke trend is al zichtbaar op de eerste grafiek: beduidend minder ongevallen in 2020. Hier is een eenvoudige verklaring voor: Corona.
+Iedereen werd verzocht om zoveel mogelijk thuis te blijven en van thuis te werken. Het gevolg was dat er veel minder mensen op de baan waren, en er dus veel minder ongevallen zijn.
+
+
 ```js
 Plot.plot({
     color: {scheme: "Blues"},
     y: {grid: true, domain: [0, 43000], label: "accidents"},
-    title: "Ongevallen per jaar",
+    title: "Gekende ongevallen per jaar",
     marginTop: 0,
     insetRight: 0,
     x: {tickFormat: ""},
     marks: [
         Plot.barY(
             ongevallen_per_jaar,
-            {x: "year", y:"value"}
+            {x: "year", y:"value", tip:true}
         ),
         Plot.ruleY([0])
     ]
@@ -48,7 +57,7 @@ const rawdata = await FileAttachment("data/OPENDATA_MAP_2017-2022.csv").csv()
 const ongevallen_per_maand_jaar = await FileAttachment("data/ongevallen_gewonden_maand_jaar.json").json();
 ```
 
-Onderstaande grafiek toont het aantal ongevallen per maand doorheen de jaren.
+Onderstaande visualisatie toont het aantal ongevallen per maand doorheen de jaren.
 Hierbij hebben we gekozen voor een heatmap om de relatieve frequenties van
 ongevallen in verschillende periodes in één oogopslag te kunnen vergelijken.
 
