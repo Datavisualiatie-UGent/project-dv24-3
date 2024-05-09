@@ -37,7 +37,7 @@ Plot.plot({
     marks: [
         Plot.cell(
             ongevallen_per_maand_jaar,
-            {x: "year", y: "month", fill: "value", tip: true}
+            {x: "year", y: "month", fill: "value", tip: {format: {x: (y) => `${y}`, y: true, value: true}}}
         )
     ]
 })
@@ -48,7 +48,7 @@ Plot.plot({
 ````js
 const ongevallen_per_provincie = await FileAttachment("data/ongevallen_per_provincie.json").json();
 
-let units = ongevallen_per_provincie
+let units = ongevallen_per_provincie.absoluut
     .map((v) => ({group: v.provincie, label: v.provincie, freq: v.value}))
     .flatMap(d => d3.range(Math.round(d.freq / 1000)).map(() => d))
     .sort( (d1, d2) => d2.freq - d1.freq);
@@ -76,9 +76,48 @@ let units = ongevallen_per_provincie
   </div>
   <div style="flex: 0 0 20%">
   <h3>1 unit = 1000 accidents</h3>
-    ${legend(color_mapping([...new Set(ongevallen_per_provincie.map(d => d.provincie))], colorScheme))}
+    ${legend(color_mapping(ongevallen_per_provincie.provincies, colorScheme))}
   </div>
 </div>
+
+### Ongevallen per capita
+
+Bovenstaande waffle chart toont de absolute aantallen van ongevallen verdeeld
+over de verschillende provincies. Dit kan echter een vertekend beeld geven,
+aangezien niet elke provincie even groot is, waardoor grotere provincies er dus
+slechter kunnen uitzien door het hogere aantal ongevallen.
+
+Onderstaande grafiek vergelijkt de ongevallen per capita, verrekend met de
+bevolkingsaantallen van elke provincie voor het jaar 2021. Hier zien we wederom
+de duidelijke daling in ongevallen in het jaar 2020. Wat we echter ook kunnen
+waarnemen is dat Oost- en West-Vlaanderen en Antwerpen beduidend meer
+ongevallen per capita hebben dan de andere provincies. Henegeouwen bijvoorbeeld
+was volgende de absolute aantallen de slechtste leerling na de drie grote
+provincies, maar per capita is het samen met Vlaams- en Waals-Brabant een van
+de laagst-scorende provincies.
+
+```js
+Plot.plot({
+  width: 800,
+  marginBottom: 50,
+  marginRight: 50,
+  x: {axis: null},
+  fx: {tickRotate: 15, label: ""},
+  y: {grid: true},
+  color: {scheme: "spectral", legend: true, type: "ordinal"},
+  marks: [
+    Plot.barY(ongevallen_per_provincie.capita, {
+        x: "jaar",
+        y: "value",
+        fill: "jaar",
+        fx: "provincie",
+        sort: {x: null, color: null, fx: {value: "-y", reduce: "sum"}},
+        tip: true
+    }),
+    Plot.ruleY([0])
+  ]
+})
+```
 
 ## Heatmap: Ongevallen per betrokken weggebruiker / obstakel
 ### logaritmische kleurschaal

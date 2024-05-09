@@ -11,6 +11,7 @@ columns = [
     ('TX_LIGHT_CONDITION_NL', 'Lichtconditie'),
     ('TX_CLASS_ACCIDENTS_NL', 'Type ongeval'),
     ('CD_ROAD_TYPE_NL', 'Type weg'),
+    ('DT_TIME', 'Tijdstip'),
 ]
 
 data = [[] for _ in columns]
