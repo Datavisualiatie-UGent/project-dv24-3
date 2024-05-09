@@ -48,10 +48,14 @@ Plot.plot({
 ````js
 const ongevallen_per_provincie = await FileAttachment("data/ongevallen_per_provincie.json").json();
 
+let sorted_provincies = ongevallen_per_provincie.absoluut
+    .map(d => d.provincie)
+    .sort((p1, p2) => p1.localeCompare(p2)
+);
 let units = ongevallen_per_provincie.absoluut
-    .map((v) => ({group: v.provincie, label: v.provincie, freq: v.value}))
-    .flatMap(d => d3.range(Math.round(d.freq / 1000)).map(() => d))
-    .sort( (d1, d2) => d2.freq - d1.freq);
+    .flatMap(d => d3.range(Math.round(d.value / 1000)).map(() => d))
+    .sort((d1, d2) => d2.value - d1.value);
+const mapped_colors = color_mapping(sorted_provincies, colorScheme);
 ````
 
 <div style="display:flex; height: 400px">
@@ -64,19 +68,19 @@ let units = ongevallen_per_provincie.absoluut
         units,
       Plot.stackX({
         y: (_, i) => Math.floor(i/20),
-        fill: "label",
-        title: "group"
+        fill: "provincie",
+        title: "provincie"
       })
     )
   ],
   x: { axis: null },
   y: { axis: null },
-  color: { values: colorScheme }
+  color: {sorted_provincies, type: "categorical", range: colorScheme }
 })}
   </div>
   <div style="flex: 0 0 20%">
   <h3>1 unit = 1000 accidents</h3>
-    ${legend(color_mapping(ongevallen_per_provincie.provincies, colorScheme))}
+    ${legend(mapped_colors)}
   </div>
 </div>
 

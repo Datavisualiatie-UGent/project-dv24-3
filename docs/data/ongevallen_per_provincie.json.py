@@ -24,7 +24,7 @@ with open("docs/data/OPENDATA_MAP_2017-2022.csv", newline='') as f:
         key = row['TX_PROV_COLLISION_NL']
 
         if key == '':
-            key = "unknown"
+            key = "Unknown"
 
         else:
             # Provincie prefix weghalen
@@ -32,7 +32,7 @@ with open("docs/data/OPENDATA_MAP_2017-2022.csv", newline='') as f:
 
         ongevallen_absoluut[key] = ongevallen_absoluut.get(key, 0) + 1
 
-        if key != 'unknown':
+        if key != 'Unknown':
             key = (key, row['DT_YEAR_COLLISION'])
             ongevallen_per_jaar[key] = ongevallen_per_jaar.get(key, 0) + 1
 
