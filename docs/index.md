@@ -54,6 +54,12 @@ const rawdata = await FileAttachment("data/OPENDATA_MAP_2017-2022.csv").csv()
 
 ```js
 const ongevallen_per_maand_jaar = await FileAttachment("data/ongevallen_gewonden_maand_jaar.json").json();
+
+const months = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+
+const colorScheme = [
+'#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'
+];
 ```
 
 Onderstaande visualisatie toont het aantal ongevallen per maand doorheen de jaren.
@@ -75,12 +81,12 @@ Plot.plot({
     xscale: "band",
     x: {type: "band", label: "Jaar", tickFormat: ""},
     y: {
-        tickFormat: Plot.formatMonth("nl", "short"), 
+        domain: months,
         label: "Maand"},
     marks: [
         Plot.cell(
             ongevallen_per_maand_jaar,
-            {x: "year", y: "month", fill: "value", tip: true}
+            {x: "year", y: "month", fill: "value", tip: {format: {x: (y) => `${y}`, y: true, value: true}}}
         )
     ]
 })
@@ -98,14 +104,19 @@ doordat in Vlaanderen meer grote steden zijn, en dat hierrond meer accidenten ge
 ````js
 const ongevallen_per_provincie = await FileAttachment("data/ongevallen_per_provincie.json").json();
 
-let units = ongevallen_per_provincie
-    .map((v) => ({group: v.provincie, label: v.provincie, freq: v.value}))
-    .flatMap(d => d3.range(Math.round(d.freq / 1000)).map(() => d))
-    .sort( (d1, d2) => d2.freq - d1.freq);
+let sorted_provincies = ongevallen_per_provincie.absoluut
+    .map(d => d.provincie)
+    .sort((p1, p2) => p1.localeCompare(p2)
+);
+let units = ongevallen_per_provincie.absoluut
+    .flatMap(d => d3.range(Math.round(d.value / 1000)).map(() => d))
+    .sort((d1, d2) => d2.value - d1.value);
+const mapped_colors = color_mapping(sorted_provincies, colorScheme);
 ````
-### 1 unit = 1000 accidents
-````js
-Plot.plot({
+
+<div style="display:flex; height: 400px">
+  <div style="flex: 0 0 60%">
+    ${Plot.plot({
     aspectRatio: 1,
     insetRight: 50,
   marks: [
@@ -113,16 +124,60 @@ Plot.plot({
         units,
       Plot.stackX({
         y: (_, i) => Math.floor(i/20),
-        fill: "label",
-        title: "group"
+        fill: "provincie",
+        title: "provincie"
       })
     )
   ],
   x: { axis: null },
   y: { axis: null },
-  color: { scheme: "Sinebow", legend: true}
+  color: {sorted_provincies, type: "categorical", range: colorScheme }
+})}
+  </div>
+  <div style="flex: 0 0 20%">
+  <h3>1 unit = 1000 accidents</h3>
+    ${legend(mapped_colors)}
+  </div>
+</div>
+
+### Ongevallen per capita
+
+Bovenstaande waffle chart toont de absolute aantallen van ongevallen verdeeld
+over de verschillende provincies. Dit kan echter een vertekend beeld geven,
+aangezien niet elke provincie even groot is, waardoor grotere provincies er dus
+slechter kunnen uitzien door het hogere aantal ongevallen.
+
+Onderstaande grafiek vergelijkt de ongevallen per capita, verrekend met de
+bevolkingsaantallen van elke provincie voor het jaar 2021. Hier zien we wederom
+de duidelijke daling in ongevallen in het jaar 2020. Wat we echter ook kunnen
+waarnemen is dat Oost- en West-Vlaanderen en Antwerpen beduidend meer
+ongevallen per capita hebben dan de andere provincies. Henegeouwen bijvoorbeeld
+was volgende de absolute aantallen de slechtste leerling na de drie grote
+provincies, maar per capita is het samen met Vlaams- en Waals-Brabant een van
+de laagst-scorende provincies.
+
+```js
+Plot.plot({
+  width: 800,
+  marginBottom: 50,
+  marginRight: 50,
+  x: {axis: null},
+  fx: {tickRotate: 15, label: ""},
+  y: {grid: true},
+  color: {scheme: "spectral", legend: true, type: "ordinal"},
+  marks: [
+    Plot.barY(ongevallen_per_provincie.capita, {
+        x: "jaar",
+        y: "value",
+        fill: "jaar",
+        fx: "provincie",
+        sort: {x: null, color: null, fx: {value: "-y", reduce: "sum"}},
+        tip: true
+    }),
+    Plot.ruleY([0])
+  ]
 })
-````
+```
 
 ## Heatmap: Ongevallen per betrokken weggebruiker / obstakel
 
@@ -145,14 +200,15 @@ Deze hebben dan hoofdzakelijk ongevallen met personenwagens en andere fietsers
 const ongevallen_per_weggebruiker = await FileAttachment("data/ongevallen_per_betrokken_weggebruiker.json").json();
 ```
 
-````js
+```js
 Plot.plot({
     title: "betrokken weggebruikers",
     color: {legend: true, scheme: "Oranges", type: "log"},
-    aspectRatio: 1.4,
+    aspectRatio: 2.5,
     marginTop: 0,
-    marginLeft: 200,
+    marginLeft: 300,
     marginBottom: 120,
+    marginRight: 100,
     xscale: {type: "band"},
     x: {type: "band", label: "Primaire bestuurder", tickRotate: 55},
     y: {label: "Obstakel of ander voertuig"},
@@ -167,7 +223,7 @@ Plot.plot({
         )
     ]
 })
-````
+```
 
 
 ## Explore it yourself
@@ -199,8 +255,6 @@ const distinct_road = [...new Set(type_weg_ongeval.map(d => d.road))];
 ```
 
 ````js
-let colorScheme = [...new Array(20)].map(() => d3.interpolateSpectral(Math.random())).map(d => d3.color(d).formatHex());
-
 const type_victim_colors_mapped = color_mapping(distinct_type_victim, colorScheme);
 const type_victim_data = add_color_to_data(type_gewonden_ongeval, type_victim_colors_mapped, "class");
 
@@ -232,13 +286,13 @@ const legend_selector = {
     "Type weg" : color_mapping(distinct_road, colorScheme),
     };
 const selector = {
-    "Type gewonde": {"key" : "class", "data": type_victim_data, "distinct": distinct_type_victim},
-    "Bebouwde kom": {"key" : "area", "data": build_area_data, "distinct" : distinct_build_area},
-    "Kruispunt" : {"key" : "cross", "data" : crossway_data, "distinct" : distinct_crossway},
-    "Weersomstandigheden" : {"key" : "weather", "data": weather_data, "distinct" : distinct_weather},
-    "Conditie van de weg" : {"key" : "cond", "data" : cond_data, "distinct" : distinct_cond},
-    "Lichtgestelheid" : {"key" : "light", "data" : light_data, "distinct" : distinct_light},
-    "Type weg" : {"key" : "road", "data" : road_data, "distinct" : distinct_road}
+    "Type gewonde": {"key" : "class", "data": type_victim_data, "distinct": distinct_type_victim, "default": distinct_type_victim},
+    "Bebouwde kom": {"key" : "area", "data": build_area_data, "distinct" : distinct_build_area, "default": distinct_build_area},
+    "Kruispunt" : {"key" : "cross", "data" : crossway_data, "distinct" : distinct_crossway, "default": distinct_crossway},
+    "Weersomstandigheden" : {"key" : "weather", "data": weather_data, "distinct" : distinct_weather, "default": distinct_weather.filter(v => { return !["normaal", "onbekend", "regenval"].includes(v); })},
+    "Conditie van de weg" : {"key" : "cond", "data" : cond_data, "distinct" : distinct_cond, "default": distinct_cond.filter(v => { return !["droog"].includes(v); })},
+    "Lichtgestelheid" : {"key" : "light", "data" : light_data, "distinct" : distinct_light, "default": distinct_light.filter(v => { return !["dag", "nacht, verlichting aanwezig en ontstoken"].includes(v); })},
+    "Type weg" : {"key" : "road", "data" : road_data, "distinct" : distinct_road, "default": distinct_road}
     }
 
 ````
@@ -249,32 +303,35 @@ const value_select = Generators.input(select_input);
 ```
 
 ````js
-const checkbox_input = Inputs.checkbox(selector[value_select].distinct, {value: selector[value_select].distinct});
+const checkbox_input = Inputs.checkbox(selector[value_select].distinct, {value: selector[value_select].default});
 const values_checkbox = Generators.input(checkbox_input);
 ````
 
-<div style="display:flex">
+<div style="display:flex; height: 500px; padding-top: 20px">
   <div style="flex: 0 0 20%; padding-right: 20px;">
     ${view(select_input)}
     <div style="padding-top: 20px;"></div>
     ${view(checkbox_input)}
   </div>
-  <div> 
-    ${legend(legend_selector[value_select])}
+  <div style="flex: 1;">
     ${Plot.plot({
-    x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
-    y: {
-        label: "Aantal ongevallen",
-        grid: true
-    },
-    marks: [
-        Plot.ruleY([0]),
-        Plot.lineY(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), {x: "year", y: "count", z: selector[value_select].key, stroke: "color"}),
-        Plot.dot(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), { x: "year", y: "count", z: selector[value_select].key, fill: "color", size: 3, tip: true })
-    ]
+      x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
+      y: {
+          label: "Aantal ongevallen",
+          grid: true
+      },
+      marks: [
+          Plot.ruleY([0]),
+          Plot.lineY(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), {x: "year", y: "count", z: selector[value_select].key, stroke: "color"}),
+          Plot.dot(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), { x: "year", y: "count", z: selector[value_select].key, fill: "color", size: 3, tip: true })
+      ]
     })}
   </div>
+  <div style="flex: 0 0 20%; padding-left: 20px; padding-top: 20px">
+    ${legend(legend_selector[value_select])}
+  </div>
 </div>
+
 
 
 ## Kaart: Type slachtoffer met locatie
@@ -284,134 +341,123 @@ gewonden. Aangezien personenwagens de meeste ongevallen veroorzaken is het niet
 onverwacht dat de datapunten een vrij gedetailleerde kaart vormen van het
 Belgisch wegennet.
 
-````js
+```js
 const belgium = await FileAttachment("data/Gemeenten_Fusies.json").json()
+const coordinates = await FileAttachment("data/coordinaten.json").json()
+```
 
-const geolocations = rawdata.map(d => ({
-    x: parseFloat(d.MS_X_COORD),
-    y: parseFloat(d.MS_Y_COORD),
-    type: d.TX_CLASS_ACCIDENTS_NL.toLowerCase()
-})).filter(d => isFinite(d.x) && isFinite(d.y));
-
+```js
 proj4.defs("EPSG:31370", "+proj=lcc +lat_0=90 +lon_0=4.36748666666667 +lat_1=51.1666672333333 +lat_2=49.8333339 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,-0.3366,0.457,-1.8422,-1.2747 +units=m +no_defs +type=crs");
 
-// Convert all geolocations to geographic coordinates (Lambert 1972 projection)
-const geographic_coordinates = geolocations.map(d => {
-    const transformedCoordinates = proj4('EPSG:31370', 'EPSG:4326', [d.x, d.y]);
-    return { coordinates: transformedCoordinates, type: d.type };
+for (const type of coordinates.distinct_types) {
+    coordinates.coordinates[type] = coordinates.coordinates[type].map(d => {
+        const transformed = proj4('EPSG:31370', 'EPSG:4326', [d.x, d.y]);
+
+        return {x: transformed[0], y: transformed[1]};
     });
+}
+```
 
-const distinct_types = [...new Set(geolocations.map(d => d.type))];
-
-const coordinates_by_type = new Object();
-
-distinct_types.forEach(type => {
-    const coordinates = geographic_coordinates.filter(d => d.type === type).map(d => ({ coordinates: d.coordinates, type:d.type }));
-    coordinates_by_type[type] = coordinates;
-});
-
-
-function chart(value) {
-    const width = 800;
-    const height = 600;
-
-    // Create a new SVG element
-    const svg = d3.create("svg")
-        .attr("viewBox", [0, 0, width, height]);
-
-    // Define the Mercator projection
-    const projection = d3.geoMercator().fitSize([width, height], topojson.feature(belgium, belgium.objects.Gemeenten));
-    
-    // Create a path generator
-    const path = d3.geoPath().projection(projection);
-    
-    svg.append("path")
-        .datum(topojson.feature(belgium, belgium.objects.Gemeenten))
-        .attr("d", path)
-        .attr("fill", "lightgray")
-        .attr("stroke", "white");
-
-    // Define a scale for colors
-    const colorScale = d3.scaleOrdinal()
-        .domain(geographic_coordinates.map(d => d.type))
+```js
+const colorScale = d3.scaleOrdinal()
+        .domain(coordinates.distinct_types)
         .range(d3.schemeCategory10);
+```
 
-    // Define the legend item width and height
-    const legendItemWidth = 30;
-    const legendItemHeight = 30;
-      
-      // Create a legend for the colors
-    const legend = svg.append("g")
-        .attr("class", "legend")
-        .attr("transform", "translate(20," + (height - (colorScale.domain().length * legendItemHeight)) + ")");
-    
-    // Add rectangles and labels for each year in the legend
-    legend.selectAll("rect")
-        .data(colorScale.domain())
-        .enter().append("rect")
-        .attr("x", 0)
-        .attr("y", (d, i) => i * legendItemHeight)
-        .attr("width", legendItemWidth)
-        .attr("height", legendItemHeight)
-        .attr("fill", colorScale);
-    
-    legend.selectAll("text")
-        .data(colorScale.domain())
-        .enter().append("text")
-        .attr("x", legendItemWidth + 5)
-        .attr("y", (d, i) => i * legendItemHeight + legendItemHeight / 2)
-        .attr("dy", "0.35em")
-        .text(d => d)
-        .attr("fill", "black")
-        .style("font-size", "16px")
-        .style("font-family", "Arial");
+```js
+function map(value) {
+  const width = 1000;
+  const height = 800;
+  const r = 1.5;
+  const projection = d3.geoMercator().fitSize([width, height], topojson.feature(belgium, belgium.objects.Gemeenten));
+  const canvas = d3.create("canvas")
+      .attr("width", width)
+      .attr("height", height);
+  const context = canvas.node().getContext('2d');
+  const path = d3.geoPath(null, context).projection(projection);
 
-    // Update function
-    function update(value) {
-        const displayed = value.reduce((result, key) => {
-            if (coordinates_by_type[key]) {
-                result = result.concat(coordinates_by_type[key]);
+  d3.select(context.canvas).call(d3.zoom()
+      .scaleExtent([1, 8])
+      .on("zoom", ({transform}) => zoomed(transform)));
+
+  function zoomed(transform) {
+    context.save();
+    context.clearRect(0, 0, width, height);
+    context.translate(transform.x, transform.y);
+    context.scale(transform.k, transform.k);
+    context.canvas.style.maxWidth = "100%";
+    context.lineJoin = "round";
+    context.lineCap = "round";
+
+    context.beginPath();
+    path(topojson.feature(belgium, belgium.objects.Gemeenten));
+    context.fillStyle = "lightgray";
+    context.fill();
+
+    context.beginPath();
+    path(topojson.feature(belgium, belgium.objects.Gemeenten, (a, b) => a !== b ));
+    context.lineWidth = 0.5;
+    context.strokeStyle = "white";
+    context.stroke();
+
+    for (const type of coordinates.distinct_types) {
+        if (value.includes(type)) {
+            for (const obj of coordinates.coordinates[type]) {
+                context.beginPath();
+                context.fillStyle = colorScale(type);
+                const [proj_x, proj_y] = projection([obj.x, obj.y]);
+                context.moveTo(proj_x + r, proj_y);
+                context.arc(proj_x, proj_y, r, 0, 2 * Math.PI);
+                context.fill();
             }
-            return result;
-        }, []);
-
-        svg.selectAll("circle") // Select all circles
-        .data(displayed, d => d.type) // Bind data filtered by checkbox values
-        .join(
-            enter => enter.append("circle") // Append new circles for entered data
-            .attr("cx", d => projection(d.coordinates)[0])
-            .attr("cy", d => projection(d.coordinates)[1])
-            .attr("r", 1)
-            .attr("fill", d => colorScale(d.type))
-            .attr("class", d => "type-" + d.type),
-            exit => exit.remove() // Remove circles for exited data
-        );
+        }
+    }
+    
+    context.restore();
   }
 
-  // Initialize with all types displayed
-  update(value);
+  zoomed(d3.zoomIdentity);
 
-  // Bind update function to value change
-  Object.defineProperty(svg.node(), "value", {
-    get() {
-      return value;
-    },
-    set(v) {
-      value = v;
-      update(value); // Call update function
-    }
-  });
-  
-  
-    // Display the SVG
-    return svg.node();
+  return context.canvas;
 }
+```
 
-let type_victim = chart(distinct_types);
+```js
+const input = view(Inputs.checkbox(coordinates.distinct_types, {
+  description: 'Choose the type to display on the map',
+  value: coordinates.distinct_types
+}));
+```
 
-````
-${Inputs.bind(Inputs.checkbox(distinct_types, {value: distinct_types, format: (x) => x}), type_victim)}
-${view(type_victim)}
+```js
+view(map(input));
+```
+
 
 ## TODO: Correlatiematrix?
 
+```js
+const correlaties = await FileAttachment("data/correlaties.json").json();
+```
+
+````js
+Plot.plot({
+    color: {legend: true, scheme: "Oranges"},
+    aspectRatio: 1.4,
+    marginTop: 0,
+    marginLeft: 200,
+    marginBottom: 120,
+    xscale: {type: "band"},
+    x: {type: "band", label: "Attribuut 1", tickRotate: 55},
+    y: {label: "Attribuut 2"},
+    style: {
+        fontSize: 12,
+    },
+    marks: [
+        Plot.cell(
+            correlaties,
+            {x: "column_1", y: "column_2", fill: "value", tip: true}
+        )
+    ]
+})
+````
