@@ -26,7 +26,6 @@ Iedereen werd verzocht om zoveel mogelijk thuis te blijven en van thuis te werke
 
 ```js
 Plot.plot({
-    color: {scheme: "Blues"},
     y: {grid: true, domain: [0, 43000], label: "accidents"},
     title: "Gekende ongevallen per jaar",
     marginTop: 0,
@@ -62,12 +61,12 @@ Hierbij hebben we gekozen voor een heatmap om de relatieve frequenties van
 ongevallen in verschillende periodes in één oogopslag te kunnen vergelijken.
 
 Interessant hier is dat 2020 beduidend minder ongevallen heeft dan andere
-jaren, met april 2020 veruit het minste aantal ongevallen. Dit kan natuurlijk
-verklaard worden door de Covid-19 pandemie die in 2020 de wereld, en bijgevolg
-het verkeer, abrupt stil legde.
+jaren, met april 2020 veruit het minste aantal ongevallen. Dit is natuurlijk het begin van de Covid-19 pandemie, 
+wanneer iedereen de regels strikt volgde en enkel buiten ging wanneer dit echt noodzakelijk was.
 
 ````js
 Plot.plot({
+    title: "Gekende ongevallen per jaar per maand",
     width: 350,
     height: 600,
     color: {legend: true, scheme: "Oranges"},
@@ -87,10 +86,14 @@ Plot.plot({
 })
 ````
 
-## Waffle chart: Aantal ongevallen met gewonden per provincie 
+## Bar chart: Aantal ongevallen per provincie 
 
 Hier visualiseren we hoe het totaal aantal ongevallen verdeeld is onder de
-verschillende provincies.
+verschillende provincies relatief ten opzichte van het aantal inwoners.
+Oost-Vlaanderen is de provincie met gemiddeld het meeste ongevallen per inwoner.
+
+Over het algemeen lijkt het ook dat de Waalse provincies het beter doen dan de Vlaamse. Dit kan natuurlijk komen 
+doordat in Vlaanderen meer grote steden zijn, en dat hierrond meer accidenten gebeuren.
 
 ````js
 const ongevallen_per_provincie = await FileAttachment("data/ongevallen_per_provincie.json").json();
@@ -125,14 +128,18 @@ Plot.plot({
 
 De dataset bevat voor elk ongeval ook informatie over de twee betrokken
 partijen. Met onderstaande heatmap visualiseren we welke combinaties van
-partijen er het vaakst voorkomen in de dataset.
+partijen er het vaakst voorkomen in de dataset. Op de X as staat de primaire bestuurder.
+Dit is de bestuurder die een ongeval heeft gehad. Op de Y as staan andere betrokken bestuurders of obstakels.
+Het kleur geeft aan hoeveel zo een type ongeval is geregistreerd. Opgelet: het is een logaritmische kleurschaal.
 
 Hier zien we dat de personenwagen veruit de grootste partij is, gecombineerd
 met een andere personenwagen, een fietser, of een hindernis. Dit laatste
 betekent dat de personenwagen niet tegen een ander voertuig is gereden, maar
 tegen een object of gebouw.
 
-### logaritmische kleurschaal
+Daarnaast is het ook zichtbaar dat fietser een grote groep van primaire bestuurders zijn.
+Deze hebben dan hoofdzakelijk ongevallen met personenwagens en andere fietsers
+
 
 ```js
 const ongevallen_per_weggebruiker = await FileAttachment("data/ongevallen_per_betrokken_weggebruiker.json").json();
@@ -140,14 +147,15 @@ const ongevallen_per_weggebruiker = await FileAttachment("data/ongevallen_per_be
 
 ````js
 Plot.plot({
+    title: "betrokken weggebruikers",
     color: {legend: true, scheme: "Oranges", type: "log"},
     aspectRatio: 1.4,
     marginTop: 0,
     marginLeft: 200,
     marginBottom: 120,
     xscale: {type: "band"},
-    x: {type: "band", label: "Weggebruiker 1", tickRotate: 55},
-    y: {label: "Weggebruiker 2"},
+    x: {type: "band", label: "Primaire bestuurder", tickRotate: 55},
+    y: {label: "Obstakel of ander voertuig"},
     style: {
         fontSize: 12,
     },
@@ -162,7 +170,10 @@ Plot.plot({
 ````
 
 
-## Line chart: Type slachtoffer in ongevallen met gewonden
+## Explore it yourself
+
+De volgende visualisatie is interactief: je kan een onderwerp kiezen, zoals gewonden of kruispunten, en dan bekijken welke data hierover bestaat.
+Zo is voor ongevallen bijvoorbeeld te zien dat het merendeel gebeurt niet in de buurt van een kruispunt
 
 ```js
 const type_gewonden_ongeval = await FileAttachment("data/line_chart/type_gewonden_ongeval.json").json();
