@@ -1,6 +1,7 @@
 import csv
 import json
 import sys
+import gzip
 
 weer = {}
 
@@ -22,7 +23,7 @@ group = {'normaal': 'normaal',
          'sterke wind, rukwind+hagelbui' : 'sterke wind + hagelbui'
          }
 
-with open("docs/data/OPENDATA_MAP_2017-2022.csv", newline='') as f:
+with gzip.open("docs/data/OPENDATA_MAP_2017-2022.csv.gz", mode="rt", newline='') as f:
     csv_reader = csv.DictReader(f, delimiter=',', quotechar='"')
 
     i = 0

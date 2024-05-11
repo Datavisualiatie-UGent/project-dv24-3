@@ -2,6 +2,7 @@ import csv
 import json
 import sys
 import numpy as np
+import gzip
 
 columns = [
     ('TX_CROSSWAY_NL', 'Kruispunt'),
@@ -17,7 +18,7 @@ columns = [
 data = [[] for _ in columns]
 possible_values = [[] for _ in columns]
 
-with open("docs/data/OPENDATA_MAP_2017-2022.csv", newline='') as f:
+with gzip.open("docs/data/OPENDATA_MAP_2017-2022.csv.gz", mode="rt", newline='') as f:
     csv_reader = csv.DictReader(f, delimiter=',', quotechar='"')
 
     for row in csv_reader:
