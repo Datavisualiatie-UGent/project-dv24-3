@@ -4,34 +4,601 @@
 <title>Verkeersongelukken | Data-visualisatie</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
-<link rel="preload" as="style" href="./_observablehq/theme-near-midnight.css">
+<link rel="preload" as="style" href="./_observablehq/theme-air.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_observablehq/theme-near-midnight.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.css">
 <link rel="modulepreload" href="./_observablehq/client.js">
 <link rel="modulepreload" href="./_observablehq/runtime.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.js">
+<link rel="modulepreload" href="./_npm/proj4@2.11.0/_esm.js">
+<link rel="modulepreload" href="./_import/components/legends.61a35010.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.14/_esm.js">
+<link rel="modulepreload" href="./_npm/topojson-client@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/htl@0.3.1/_esm.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/_esm.js">
+<link rel="modulepreload" href="./_npm/wkt-parser@1.3.3/_esm.js">
+<link rel="modulepreload" href="./_npm/mgrs@1.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/_esm.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/_esm.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.0.1/_esm.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/_esm.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.2/_esm.js">
 <script type="module">
 
-import "./_observablehq/client.js";
+import {define} from "./_observablehq/client.js";
+import {registerFile} from "./_observablehq/stdlib.js";
+
+registerFile("./data/Gemeenten_Fusies.json", {"name":"./data/Gemeenten_Fusies.json","mimeType":"application/json","path":"./data/Gemeenten_Fusies.json"});
+registerFile("./data/OPENDATA_MAP_2017-2022.csv", {"name":"./data/OPENDATA_MAP_2017-2022.csv","mimeType":"text/csv","path":"./data/OPENDATA_MAP_2017-2022.csv"});
+registerFile("./data/coordinaten.json", {"name":"./data/coordinaten.json","mimeType":"application/json","path":"./_file/data/coordinaten.466b1717.json","lastModified":1715439906581});
+registerFile("./data/correlaties.json", {"name":"./data/correlaties.json","mimeType":"application/json","path":"./_file/data/correlaties.71571ea3.json","lastModified":1715439909429});
+registerFile("./data/line_chart/bebouwde_kom_ongeval.json", {"name":"./data/line_chart/bebouwde_kom_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/bebouwde_kom_ongeval.69bf6ce3.json","lastModified":1715439892045});
+registerFile("./data/line_chart/kruispunt_ongeval.json", {"name":"./data/line_chart/kruispunt_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/kruispunt_ongeval.29db66d6.json","lastModified":1715439894261});
+registerFile("./data/line_chart/lichtgesteldheid_ongeval.json", {"name":"./data/line_chart/lichtgesteldheid_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/lichtgesteldheid_ongeval.5a4f3009.json","lastModified":1715439901009});
+registerFile("./data/line_chart/type_gewonden_ongeval.json", {"name":"./data/line_chart/type_gewonden_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/type_gewonden_ongeval.e61c6a10.json","lastModified":1715439889829});
+registerFile("./data/line_chart/type_weg_ongeval.json", {"name":"./data/line_chart/type_weg_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/type_weg_ongeval.aaca8169.json","lastModified":1715439903309});
+registerFile("./data/line_chart/weersomstandigheden_ongeval.json", {"name":"./data/line_chart/weersomstandigheden_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/weersomstandigheden_ongeval.5272cae6.json","lastModified":1715439896509});
+registerFile("./data/line_chart/wegconditie_ongeval.json", {"name":"./data/line_chart/wegconditie_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/wegconditie_ongeval.cc287713.json","lastModified":1715439898757});
+registerFile("./data/ongevallen_gewonden_jaar.json", {"name":"./data/ongevallen_gewonden_jaar.json","mimeType":"application/json","path":"./_file/data/ongevallen_gewonden_jaar.078bd319.json","lastModified":1715439880628});
+registerFile("./data/ongevallen_gewonden_maand_jaar.json", {"name":"./data/ongevallen_gewonden_maand_jaar.json","mimeType":"application/json","path":"./_file/data/ongevallen_gewonden_maand_jaar.dd030d62.json","lastModified":1715439882881});
+registerFile("./data/ongevallen_per_betrokken_weggebruiker.json", {"name":"./data/ongevallen_per_betrokken_weggebruiker.json","mimeType":"application/json","path":"./_file/data/ongevallen_per_betrokken_weggebruiker.13b0ca2a.json","lastModified":1715439887529});
+registerFile("./data/ongevallen_per_provincie.json", {"name":"./data/ongevallen_per_provincie.json","mimeType":"application/json","path":"./_file/data/ongevallen_per_provincie.b79a6278.json","lastModified":1715439885181});
+
+define({id: "a1762887", outputs: ["proj4","legend","color_mapping","add_color_to_data"], body: async () => {
+const [{default: proj4}, {legend, color_mapping, add_color_to_data}] = await Promise.all([import("./_npm/proj4@2.11.0/_esm.js"), import("./_import/components/legends.61a35010.js")]);
+
+return {proj4,legend,color_mapping,add_color_to_data};
+}});
+
+define({id: "886dafcf", inputs: ["FileAttachment"], outputs: ["ongevallen_per_jaar"], body: async (FileAttachment) => {
+const ongevallen_per_jaar = await FileAttachment("./data/ongevallen_gewonden_jaar.json").json();
+return {ongevallen_per_jaar};
+}});
+
+define({id: "5d7579f0", inputs: ["Plot","ongevallen_per_jaar","display"], body: async (Plot,ongevallen_per_jaar,display) => {
+display(await(
+Plot.plot({
+    y: {grid: true, domain: [0, 43000], label: "accidents"},
+    title: "Gekende ongevallen per jaar",
+    marginTop: 0,
+    insetRight: 0,
+    x: {tickFormat: ""},
+    marks: [
+        Plot.barY(
+            ongevallen_per_jaar,
+            {x: "year", y:"value", tip:true}
+        ),
+        Plot.ruleY([0])
+    ]
+})
+))
+}});
+
+define({id: "2ad2f578", inputs: ["FileAttachment"], outputs: ["rawdata"], body: async (FileAttachment) => {
+const rawdata = await FileAttachment("./data/OPENDATA_MAP_2017-2022.csv").csv()
+return {rawdata};
+}});
+
+define({id: "a85f2043", inputs: ["FileAttachment"], outputs: ["ongevallen_per_maand_jaar","months","colorScheme"], body: async (FileAttachment) => {
+const ongevallen_per_maand_jaar = await FileAttachment("./data/ongevallen_gewonden_maand_jaar.json").json();
+
+const months = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+
+const colorScheme = [
+'#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'
+];
+return {ongevallen_per_maand_jaar,months,colorScheme};
+}});
+
+define({id: "a0b11e16", inputs: ["Plot","months","ongevallen_per_maand_jaar","display"], body: async (Plot,months,ongevallen_per_maand_jaar,display) => {
+display(await(
+Plot.plot({
+    title: "Gekende ongevallen per jaar per maand",
+    width: 350,
+    height: 600,
+    color: {legend: true, scheme: "Oranges"},
+    marginTop: 0,
+    aspectRatio: 1,
+    xscale: "band",
+    x: {type: "band", label: "Jaar", tickFormat: ""},
+    y: {
+        domain: months,
+        label: "Maand"},
+    marks: [
+        Plot.cell(
+            ongevallen_per_maand_jaar,
+            {x: "year", y: "month", fill: "value", tip: {format: {x: (y) => `${y}`, y: true, value: true}}}
+        )
+    ]
+})
+))
+}});
+
+define({id: "88b22fd6", inputs: ["FileAttachment","d3","color_mapping","colorScheme"], outputs: ["ongevallen_per_provincie","sorted_provincies","units","mapped_colors"], body: async (FileAttachment,d3,color_mapping,colorScheme) => {
+const ongevallen_per_provincie = await FileAttachment("./data/ongevallen_per_provincie.json").json();
+
+let sorted_provincies = ongevallen_per_provincie.absoluut
+    .map(d => d.provincie)
+    .sort((p1, p2) => p1.localeCompare(p2)
+);
+let units = ongevallen_per_provincie.absoluut
+    .flatMap(d => d3.range(Math.round(d.value / 1000)).map(() => d))
+    .sort((d1, d2) => d2.value - d1.value);
+const mapped_colors = color_mapping(sorted_provincies, colorScheme);
+return {ongevallen_per_provincie,sorted_provincies,units,mapped_colors};
+}});
+
+define({id: "248a22dc", inline: true, inputs: ["Plot","units","sorted_provincies","colorScheme","display"], body: async (Plot,units,sorted_provincies,colorScheme,display) => {
+display(await(
+Plot.plot({
+    aspectRatio: 1,
+    insetRight: 50,
+  marks: [
+    Plot.cell(
+        units,
+      Plot.stackX({
+        y: (_, i) => Math.floor(i/20),
+        fill: "provincie",
+        title: "provincie"
+      })
+    )
+  ],
+  x: { axis: null },
+  y: { axis: null },
+  color: {sorted_provincies, type: "categorical", range: colorScheme }
+})
+))
+}});
+
+define({id: "60a96d48", inline: true, inputs: ["legend","mapped_colors","display"], body: async (legend,mapped_colors,display) => {
+display(await(
+legend(mapped_colors)
+))
+}});
+
+define({id: "acede2fb", inputs: ["Plot","ongevallen_per_provincie","display"], body: async (Plot,ongevallen_per_provincie,display) => {
+display(await(
+Plot.plot({
+  width: 800,
+  marginBottom: 50,
+  marginRight: 50,
+  x: {axis: null},
+  fx: {tickRotate: 15, label: ""},
+  y: {grid: true},
+  color: {scheme: "spectral", legend: true, type: "ordinal"},
+  marks: [
+    Plot.barY(ongevallen_per_provincie.capita, {
+        x: "jaar",
+        y: "value",
+        fill: "jaar",
+        fx: "provincie",
+        sort: {x: null, color: null, fx: {value: "-y", reduce: "sum"}},
+        tip: true
+    }),
+    Plot.ruleY([0])
+  ]
+})
+))
+}});
+
+define({id: "993d4f20", inputs: ["FileAttachment"], outputs: ["ongevallen_per_weggebruiker"], body: async (FileAttachment) => {
+const ongevallen_per_weggebruiker = await FileAttachment("./data/ongevallen_per_betrokken_weggebruiker.json").json();
+return {ongevallen_per_weggebruiker};
+}});
+
+define({id: "29d3e9e1", inputs: ["Plot","ongevallen_per_weggebruiker","display"], body: async (Plot,ongevallen_per_weggebruiker,display) => {
+display(await(
+Plot.plot({
+    title: "betrokken weggebruikers",
+    color: {legend: true, scheme: "Oranges", type: "log"},
+    aspectRatio: 2.5,
+    marginTop: 0,
+    marginLeft: 300,
+    marginBottom: 120,
+    marginRight: 100,
+    xscale: {type: "band"},
+    x: {type: "band", label: "Primaire bestuurder", tickRotate: 55},
+    y: {label: "Obstakel of ander voertuig"},
+    style: {
+        fontSize: 12,
+    },
+    //title: "Ongevallen per betrokken bestuurders",
+    marks: [
+        Plot.cell(
+            ongevallen_per_weggebruiker,
+            {x: "gebruiker_1", y: "gebruiker_2", fill: "value", tip: true}
+        )
+    ]
+})
+))
+}});
+
+define({id: "8c11564b", inputs: ["FileAttachment"], outputs: ["type_gewonden_ongeval","distinct_type_victim","bebouwde_kom_ongeval","distinct_build_area","kruispunt_ongeval","distinct_crossway","weersomstandigheden_ongeval","distinct_weather","wegconditie_ongeval","distinct_cond","lichtgesteldheid_ongeval","distinct_light","type_weg_ongeval","distinct_road"], body: async (FileAttachment) => {
+const type_gewonden_ongeval = await FileAttachment("./data/line_chart/type_gewonden_ongeval.json").json();
+const distinct_type_victim = [...new Set(type_gewonden_ongeval.map(d => d.class))];
+
+const bebouwde_kom_ongeval = await FileAttachment("./data/line_chart/bebouwde_kom_ongeval.json").json();
+const distinct_build_area = [...new Set(bebouwde_kom_ongeval.map(d => d.area))];
+
+const kruispunt_ongeval = await FileAttachment("./data/line_chart/kruispunt_ongeval.json").json();
+const distinct_crossway = [...new Set(kruispunt_ongeval.map(d => d.cross))];
+
+const weersomstandigheden_ongeval = await FileAttachment("./data/line_chart/weersomstandigheden_ongeval.json").json();
+const distinct_weather = [...new Set(weersomstandigheden_ongeval.map(d => d.weather))];
+
+const wegconditie_ongeval = await FileAttachment("./data/line_chart/wegconditie_ongeval.json").json();
+const distinct_cond = [...new Set(wegconditie_ongeval.map(d => d.cond))];
+
+const lichtgesteldheid_ongeval = await FileAttachment("./data/line_chart/lichtgesteldheid_ongeval.json").json();
+const distinct_light = [...new Set(lichtgesteldheid_ongeval.map(d => d.light))];
+
+const type_weg_ongeval = await FileAttachment("./data/line_chart/type_weg_ongeval.json").json();
+const distinct_road = [...new Set(type_weg_ongeval.map(d => d.road))];
+return {type_gewonden_ongeval,distinct_type_victim,bebouwde_kom_ongeval,distinct_build_area,kruispunt_ongeval,distinct_crossway,weersomstandigheden_ongeval,distinct_weather,wegconditie_ongeval,distinct_cond,lichtgesteldheid_ongeval,distinct_light,type_weg_ongeval,distinct_road};
+}});
+
+define({id: "0eca3825", inputs: ["color_mapping","distinct_type_victim","colorScheme","add_color_to_data","type_gewonden_ongeval","distinct_build_area","bebouwde_kom_ongeval","distinct_crossway","kruispunt_ongeval","distinct_weather","weersomstandigheden_ongeval","distinct_cond","wegconditie_ongeval","distinct_light","lichtgesteldheid_ongeval","distinct_road","type_weg_ongeval"], outputs: ["type_victim_colors_mapped","type_victim_data","build_area_colors_mapped","build_area_data","crossway_colors_mapped","crossway_data","weather_colors_mapped","weather_data","cond_colors_mapped","cond_data","light_colors_mapped","light_data","road_colors_mapped","road_data","legend_selector","selector"], body: (color_mapping,distinct_type_victim,colorScheme,add_color_to_data,type_gewonden_ongeval,distinct_build_area,bebouwde_kom_ongeval,distinct_crossway,kruispunt_ongeval,distinct_weather,weersomstandigheden_ongeval,distinct_cond,wegconditie_ongeval,distinct_light,lichtgesteldheid_ongeval,distinct_road,type_weg_ongeval) => {
+const type_victim_colors_mapped = color_mapping(distinct_type_victim, colorScheme);
+const type_victim_data = add_color_to_data(type_gewonden_ongeval, type_victim_colors_mapped, "class");
+
+const build_area_colors_mapped = color_mapping(distinct_build_area, colorScheme);
+const build_area_data = add_color_to_data(bebouwde_kom_ongeval, build_area_colors_mapped, "area");
+
+const crossway_colors_mapped = color_mapping(distinct_crossway, colorScheme);
+const crossway_data = add_color_to_data(kruispunt_ongeval, crossway_colors_mapped, "cross");
+
+const weather_colors_mapped = color_mapping(distinct_weather, colorScheme);
+const weather_data = add_color_to_data(weersomstandigheden_ongeval, weather_colors_mapped, "weather");
+
+const cond_colors_mapped = color_mapping(distinct_cond, colorScheme);
+const cond_data = add_color_to_data(wegconditie_ongeval, cond_colors_mapped, "cond");
+
+const light_colors_mapped = color_mapping(distinct_light, colorScheme);
+const light_data = add_color_to_data(lichtgesteldheid_ongeval, light_colors_mapped, "light");
+
+const road_colors_mapped = color_mapping(distinct_road, colorScheme);
+const road_data = add_color_to_data(type_weg_ongeval, road_colors_mapped, "road");
+
+const legend_selector = {
+    "Type gewonde" : color_mapping(distinct_type_victim, colorScheme),
+    "Bebouwde kom" : color_mapping(distinct_build_area, colorScheme),
+    "Kruispunt" : color_mapping(distinct_crossway, colorScheme),
+    "Weersomstandigheden" : color_mapping(distinct_weather, colorScheme),
+    "Conditie van de weg" : color_mapping(distinct_cond, colorScheme),
+    "Lichtgestelheid" : color_mapping(distinct_light, colorScheme),
+    "Type weg" : color_mapping(distinct_road, colorScheme),
+    };
+const selector = {
+    "Type gewonde": {"key" : "class", "data": type_victim_data, "distinct": distinct_type_victim, "default": distinct_type_victim},
+    "Bebouwde kom": {"key" : "area", "data": build_area_data, "distinct" : distinct_build_area, "default": distinct_build_area},
+    "Kruispunt" : {"key" : "cross", "data" : crossway_data, "distinct" : distinct_crossway, "default": distinct_crossway},
+    "Weersomstandigheden" : {"key" : "weather", "data": weather_data, "distinct" : distinct_weather, "default": distinct_weather.filter(v => { return !["normaal", "onbekend", "regenval"].includes(v); })},
+    "Conditie van de weg" : {"key" : "cond", "data" : cond_data, "distinct" : distinct_cond, "default": distinct_cond.filter(v => { return !["droog"].includes(v); })},
+    "Lichtgestelheid" : {"key" : "light", "data" : light_data, "distinct" : distinct_light, "default": distinct_light.filter(v => { return !["dag", "nacht, verlichting aanwezig en ontstoken"].includes(v); })},
+    "Type weg" : {"key" : "road", "data" : road_data, "distinct" : distinct_road, "default": distinct_road}
+    }
+
+return {type_victim_colors_mapped,type_victim_data,build_area_colors_mapped,build_area_data,crossway_colors_mapped,crossway_data,weather_colors_mapped,weather_data,cond_colors_mapped,cond_data,light_colors_mapped,light_data,road_colors_mapped,road_data,legend_selector,selector};
+}});
+
+define({id: "f7b34bee", inputs: ["Inputs","Generators"], outputs: ["select_input","value_select"], body: (Inputs,Generators) => {
+const select_input = Inputs.select(["Type gewonde", "Bebouwde kom", "Kruispunt", "Weersomstandigheden", "Conditie van de weg", "Lichtgestelheid", "Type weg"], {value:"Type gewonde", width: 120});
+const value_select = Generators.input(select_input);
+return {select_input,value_select};
+}});
+
+define({id: "c6d9d7ac", inputs: ["Inputs","selector","value_select","Generators"], outputs: ["checkbox_input","values_checkbox"], body: (Inputs,selector,value_select,Generators) => {
+const checkbox_input = Inputs.checkbox(selector[value_select].distinct, {value: selector[value_select].default});
+const values_checkbox = Generators.input(checkbox_input);
+return {checkbox_input,values_checkbox};
+}});
+
+define({id: "2745c087", inline: true, inputs: ["view","select_input"], body: (view,select_input) => {
+view(select_input)
+}});
+
+define({id: "d96a8f67", inline: true, inputs: ["view","checkbox_input"], body: (view,checkbox_input) => {
+view(checkbox_input)
+}});
+
+define({id: "5b90f10d", inline: true, inputs: ["Plot","d3","selector","value_select","values_checkbox","display"], body: async (Plot,d3,selector,value_select,values_checkbox,display) => {
+display(await(
+Plot.plot({
+      x: {label: "Jaar", tickFormat: d3.format("d"), ticks: 6},
+      y: {
+          label: "Aantal ongevallen",
+          grid: true
+      },
+      marks: [
+          Plot.ruleY([0]),
+          Plot.lineY(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), {x: "year", y: "count", z: selector[value_select].key, stroke: "color"}),
+          Plot.dot(selector[value_select].data.filter(d => (values_checkbox.includes(d[selector[value_select].key]))), { x: "year", y: "count", z: selector[value_select].key, fill: "color", size: 3, tip: true })
+      ]
+    })
+))
+}});
+
+define({id: "1abb10f9", inline: true, inputs: ["legend","legend_selector","value_select","display"], body: async (legend,legend_selector,value_select,display) => {
+display(await(
+legend(legend_selector[value_select])
+))
+}});
+
+define({id: "c8d157c8", inputs: ["FileAttachment"], outputs: ["belgium","coordinates"], body: async (FileAttachment) => {
+const belgium = await FileAttachment("./data/Gemeenten_Fusies.json").json()
+const coordinates = await FileAttachment("./data/coordinaten.json").json()
+return {belgium,coordinates};
+}});
+
+define({id: "ae43fe47", inputs: ["proj4","coordinates"], body: (proj4,coordinates) => {
+proj4.defs("EPSG:31370", "+proj=lcc +lat_0=90 +lon_0=4.36748666666667 +lat_1=51.1666672333333 +lat_2=49.8333339 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,-0.3366,0.457,-1.8422,-1.2747 +units=m +no_defs +type=crs");
+
+for (const type of coordinates.distinct_types) {
+    coordinates.coordinates[type] = coordinates.coordinates[type].map(d => {
+        const transformed = proj4('EPSG:31370', 'EPSG:4326', [d.x, d.y]);
+
+        return {x: transformed[0], y: transformed[1]};
+    });
+}
+}});
+
+define({id: "4ff3d98e", inputs: ["d3","coordinates"], outputs: ["colorScale"], body: (d3,coordinates) => {
+const colorScale = d3.scaleOrdinal()
+        .domain(coordinates.distinct_types)
+        .range(d3.schemeCategory10);
+return {colorScale};
+}});
+
+define({id: "8bc44eaa", inputs: ["d3","topojson","belgium","coordinates","colorScale"], outputs: ["map"], body: (d3,topojson,belgium,coordinates,colorScale) => {
+function map(value) {
+  const width = 1000;
+  const height = 800;
+  const r = 1.5;
+  const projection = d3.geoMercator().fitSize([width, height], topojson.feature(belgium, belgium.objects.Gemeenten));
+  const canvas = d3.create("canvas")
+      .attr("width", width)
+      .attr("height", height);
+  const context = canvas.node().getContext('2d');
+  const path = d3.geoPath(null, context).projection(projection);
+
+  d3.select(context.canvas).call(d3.zoom()
+      .scaleExtent([1, 8])
+      .on("zoom", ({transform}) => zoomed(transform)));
+
+  function zoomed(transform) {
+    context.save();
+    context.clearRect(0, 0, width, height);
+    context.translate(transform.x, transform.y);
+    context.scale(transform.k, transform.k);
+    context.canvas.style.maxWidth = "100%";
+    context.lineJoin = "round";
+    context.lineCap = "round";
+
+    context.beginPath();
+    path(topojson.feature(belgium, belgium.objects.Gemeenten));
+    context.fillStyle = "lightgray";
+    context.fill();
+
+    context.beginPath();
+    path(topojson.feature(belgium, belgium.objects.Gemeenten, (a, b) => a !== b ));
+    context.lineWidth = 0.5;
+    context.strokeStyle = "white";
+    context.stroke();
+
+    for (const type of coordinates.distinct_types) {
+        if (value.includes(type)) {
+            for (const obj of coordinates.coordinates[type]) {
+                context.beginPath();
+                context.fillStyle = colorScale(type);
+                const [proj_x, proj_y] = projection([obj.x, obj.y]);
+                context.moveTo(proj_x + r, proj_y);
+                context.arc(proj_x, proj_y, r, 0, 2 * Math.PI);
+                context.fill();
+            }
+        }
+    }
+    
+    context.restore();
+  }
+
+  zoomed(d3.zoomIdentity);
+
+  return context.canvas;
+}
+return {map};
+}});
+
+define({id: "be5cab4a", inputs: ["view","Inputs","coordinates"], outputs: ["input"], body: (view,Inputs,coordinates) => {
+const input = view(Inputs.checkbox(coordinates.distinct_types, {
+  description: 'Choose the type to display on the map',
+  value: coordinates.distinct_types
+}));
+return {input};
+}});
+
+define({id: "a3b7b342", inputs: ["view","map","input"], body: (view,map,input) => {
+view(map(input));
+}});
+
+define({id: "4bd08fcd", inputs: ["FileAttachment"], outputs: ["correlaties"], body: async (FileAttachment) => {
+const correlaties = await FileAttachment("./data/correlaties.json").json();
+return {correlaties};
+}});
+
+define({id: "cfa07cd6", inputs: ["Plot","correlaties","display"], body: async (Plot,correlaties,display) => {
+display(await(
+Plot.plot({
+    color: {legend: true, scheme: "Oranges"},
+    aspectRatio: 1.4,
+    marginTop: 0,
+    marginLeft: 200,
+    marginBottom: 120,
+    xscale: {type: "band"},
+    x: {type: "band", label: "Attribuut 1", tickRotate: 55},
+    y: {label: "Attribuut 2"},
+    style: {
+        fontSize: 12,
+    },
+    marks: [
+        Plot.cell(
+            correlaties,
+            {x: "column_1", y: "column_2", fill: "value", tip: true}
+        )
+    ]
+})
+))
+}});
 
 </script>
 <aside id="observablehq-toc" data-selector="h1:not(:first-of-type), h2:first-child, :not(h1) + h2">
 <nav>
 <div>Contents</div>
 <ol>
-<li class="observablehq-secondary-link"><a href="#title-1">Title 1</a></li>
-<li class="observablehq-secondary-link"><a href="#title-2">Title 2</a></li>
+<li class="observablehq-secondary-link"><a href="#heatmap%3A-gekende-ongevallen-met-gewonden-per-maand-per-jaar">Heatmap: Gekende ongevallen met gewonden per maand per jaar</a></li>
+<li class="observablehq-secondary-link"><a href="#bar-chart%3A-aantal-ongevallen-per-provincie">Bar chart: Aantal ongevallen per provincie</a></li>
+<li class="observablehq-secondary-link"><a href="#heatmap%3A-ongevallen-per-betrokken-weggebruiker-%2F-obstakel">Heatmap: Ongevallen per betrokken weggebruiker / obstakel</a></li>
+<li class="observablehq-secondary-link"><a href="#explore-it-yourself">Explore it yourself</a></li>
+<li class="observablehq-secondary-link"><a href="#kaart%3A-type-slachtoffer-met-locatie">Kaart: Type slachtoffer met locatie</a></li>
+<li class="observablehq-secondary-link"><a href="#todo%3A-correlatiematrix%3F">TODO: Correlatiematrix?</a></li>
 </ol>
 </nav>
 </aside>
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
+<div id="cell-a1762887" class="observablehq observablehq--block"></div>
 <h1 id="verkeersongelukken" tabindex="-1"><a class="observablehq-header-anchor" href="#verkeersongelukken">Verkeersongelukken</a></h1>
-<p>Introstukje</p>
-<h2 id="title-1" tabindex="-1"><a class="observablehq-header-anchor" href="#title-1">Title 1</a></h2>
-<h2 id="title-2" tabindex="-1"><a class="observablehq-header-anchor" href="#title-2">Title 2</a></h2>
+<hr>
+<div id="cell-886dafcf" class="observablehq observablehq--block"></div>
+<p>Jammer genoeg zijn er elk jaar nog veel ongevallen. Het statistiekbureau van België StatBel biedt een <a href="https://statbel.fgov.be/nl/open-data/geolocalisatie-van-de-verkeersongevallen-2017-2022" target="_blank" rel="noopener noreferrer">dataset</a>
+aan waarin verkeersongevallen opgelijst staan van 2017 tot 2022. De dataset is gebaseerd op ongevallen geregistreerd door federale politie, dus het is mogelijk dat sommige ongevallen niet in deze dataset vervat zitten.
+Het doel van deze visualisatie is meer inzicht creëren in de data, en aantonen waar eventueel veiligere situaties moeten voorzien worden.</p>
+<p>Een eerste duidelijke trend is al zichtbaar op de eerste grafiek: beduidend minder ongevallen in 2020. Hier is een eenvoudige verklaring voor: Corona.
+Iedereen werd verzocht om zoveel mogelijk thuis te blijven en van thuis te werken. Het gevolg was dat er veel minder mensen op de baan waren, en er dus veel minder ongevallen zijn.</p>
+<div id="cell-5d7579f0" class="observablehq observablehq--block observablehq--loading"></div>
+<div id="cell-2ad2f578" class="observablehq observablehq--block"></div>
+<h2 id="heatmap%3A-gekende-ongevallen-met-gewonden-per-maand-per-jaar" tabindex="-1"><a class="observablehq-header-anchor" href="#heatmap%3A-gekende-ongevallen-met-gewonden-per-maand-per-jaar">Heatmap: Gekende ongevallen met gewonden per maand per jaar</a></h2>
+<div id="cell-a85f2043" class="observablehq observablehq--block"></div>
+<p>Onderstaande visualisatie toont het aantal ongevallen per maand doorheen de jaren.
+Hierbij hebben we gekozen voor een heatmap om de relatieve frequenties van
+ongevallen in verschillende periodes in één oogopslag te kunnen vergelijken.</p>
+<p>Interessant hier is dat 2020 beduidend minder ongevallen heeft dan andere
+jaren, met april 2020 veruit het minste aantal ongevallen. Dit is natuurlijk het begin van de Covid-19 pandemie,
+wanneer iedereen de regels strikt volgde en enkel buiten ging wanneer dit echt noodzakelijk was.</p>
+<div id="cell-a0b11e16" class="observablehq observablehq--block observablehq--loading"></div>
+<h2 id="bar-chart%3A-aantal-ongevallen-per-provincie" tabindex="-1"><a class="observablehq-header-anchor" href="#bar-chart%3A-aantal-ongevallen-per-provincie">Bar chart: Aantal ongevallen per provincie</a></h2>
+<p>Hier visualiseren we hoe het totaal aantal ongevallen verdeeld is onder de
+verschillende provincies relatief ten opzichte van het aantal inwoners.
+Oost-Vlaanderen is de provincie met gemiddeld het meeste ongevallen per inwoner.</p>
+<p>Over het algemeen lijkt het ook dat de Waalse provincies het beter doen dan de Vlaamse. Dit kan natuurlijk komen
+doordat in Vlaanderen meer grote steden zijn, en dat hierrond meer accidenten gebeuren.</p>
+<div id="cell-88b22fd6" class="observablehq observablehq--block"></div>
+<div style="display:flex; height: 400px">
+  <div style="flex: 0 0 60%">
+    <span id="cell-248a22dc" class="observablehq--loading"></span>
+  </div>
+  <div style="flex: 0 0 20%">
+  <h3>1 unit = 1000 accidents</h3>
+    <span id="cell-60a96d48" class="observablehq--loading"></span>
+  </div>
+</div>
+<h3 id="ongevallen-per-capita" tabindex="-1"><a class="observablehq-header-anchor" href="#ongevallen-per-capita">Ongevallen per capita</a></h3>
+<p>Bovenstaande waffle chart toont de absolute aantallen van ongevallen verdeeld
+over de verschillende provincies. Dit kan echter een vertekend beeld geven,
+aangezien niet elke provincie even groot is, waardoor grotere provincies er dus
+slechter kunnen uitzien door het hogere aantal ongevallen.</p>
+<p>Onderstaande grafiek vergelijkt de ongevallen per capita, verrekend met de
+bevolkingsaantallen van elke provincie voor het jaar 2021. Hier zien we wederom
+de duidelijke daling in ongevallen in het jaar 2020. Wat we echter ook kunnen
+waarnemen is dat Oost- en West-Vlaanderen en Antwerpen beduidend meer
+ongevallen per capita hebben dan de andere provincies. Henegeouwen bijvoorbeeld
+was volgende de absolute aantallen de slechtste leerling na de drie grote
+provincies, maar per capita is het samen met Vlaams- en Waals-Brabant een van
+de laagst-scorende provincies.</p>
+<div id="cell-acede2fb" class="observablehq observablehq--block observablehq--loading"></div>
+<h2 id="heatmap%3A-ongevallen-per-betrokken-weggebruiker-%2F-obstakel" tabindex="-1"><a class="observablehq-header-anchor" href="#heatmap%3A-ongevallen-per-betrokken-weggebruiker-%2F-obstakel">Heatmap: Ongevallen per betrokken weggebruiker / obstakel</a></h2>
+<p>De dataset bevat voor elk ongeval ook informatie over de twee betrokken
+partijen. Met onderstaande heatmap visualiseren we welke combinaties van
+partijen er het vaakst voorkomen in de dataset. Op de X as staat de primaire bestuurder.
+Dit is de bestuurder die een ongeval heeft gehad. Op de Y as staan andere betrokken bestuurders of obstakels.
+Het kleur geeft aan hoeveel zo een type ongeval is geregistreerd. Opgelet: het is een logaritmische kleurschaal.</p>
+<p>Hier zien we dat de personenwagen veruit de grootste partij is, gecombineerd
+met een andere personenwagen, een fietser, of een hindernis. Dit laatste
+betekent dat de personenwagen niet tegen een ander voertuig is gereden, maar
+tegen een object of gebouw.</p>
+<p>Daarnaast is het ook zichtbaar dat fietser een grote groep van primaire bestuurders zijn.
+Deze hebben dan hoofdzakelijk ongevallen met personenwagens en andere fietsers</p>
+<div id="cell-993d4f20" class="observablehq observablehq--block"></div>
+<div id="cell-29d3e9e1" class="observablehq observablehq--block observablehq--loading"></div>
+<h2 id="explore-it-yourself" tabindex="-1"><a class="observablehq-header-anchor" href="#explore-it-yourself">Explore it yourself</a></h2>
+<p>De volgende visualisatie is interactief: je kan een onderwerp kiezen, zoals gewonden of kruispunten, en dan bekijken welke data hierover bestaat.
+Zo is voor ongevallen bijvoorbeeld te zien dat het merendeel gebeurt niet in de buurt van een kruispunt</p>
+<div id="cell-8c11564b" class="observablehq observablehq--block"></div>
+<div id="cell-0eca3825" class="observablehq observablehq--block"></div>
+<div id="cell-f7b34bee" class="observablehq observablehq--block"></div>
+<div id="cell-c6d9d7ac" class="observablehq observablehq--block"></div>
+<div style="display:flex; height: 500px; padding-top: 20px">
+  <div style="flex: 0 0 20%; padding-right: 20px;">
+    <span id="cell-2745c087" class="observablehq--loading"></span>
+    <div style="padding-top: 20px;"></div>
+    <span id="cell-d96a8f67" class="observablehq--loading"></span>
+  </div>
+  <div style="flex: 1;">
+    <span id="cell-5b90f10d" class="observablehq--loading"></span>
+  </div>
+  <div style="flex: 0 0 20%; padding-left: 20px; padding-top: 20px">
+    <span id="cell-1abb10f9" class="observablehq--loading"></span>
+  </div>
+</div>
+<h2 id="kaart%3A-type-slachtoffer-met-locatie" tabindex="-1"><a class="observablehq-header-anchor" href="#kaart%3A-type-slachtoffer-met-locatie">Kaart: Type slachtoffer met locatie</a></h2>
+<p>Hier tonen we op een kaart alle locaties waar er ongevallen zijn gebeurd met
+gewonden. Aangezien personenwagens de meeste ongevallen veroorzaken is het niet
+onverwacht dat de datapunten een vrij gedetailleerde kaart vormen van het
+Belgisch wegennet.</p>
+<div id="cell-c8d157c8" class="observablehq observablehq--block"></div>
+<div id="cell-ae43fe47" class="observablehq observablehq--block"></div>
+<div id="cell-4ff3d98e" class="observablehq observablehq--block"></div>
+<div id="cell-8bc44eaa" class="observablehq observablehq--block"></div>
+<div id="cell-be5cab4a" class="observablehq observablehq--block"></div>
+<div id="cell-a3b7b342" class="observablehq observablehq--block"></div>
+<h2 id="todo%3A-correlatiematrix%3F" tabindex="-1"><a class="observablehq-header-anchor" href="#todo%3A-correlatiematrix%3F">TODO: Correlatiematrix?</a></h2>
+<div id="cell-4bd08fcd" class="observablehq observablehq--block"></div>
+<div id="cell-cfa07cd6" class="observablehq observablehq--block observablehq--loading"></div>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-05-11T14:35:12">May 11, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-05-11T15:04:31">May 11, 2024</a>.</div>
 </footer>
 </div>
