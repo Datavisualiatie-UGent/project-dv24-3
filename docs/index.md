@@ -221,6 +221,9 @@ Plot.plot({
 De volgende visualisatie is interactief: je kan een onderwerp kiezen, zoals gewonden of kruispunten, en dan bekijken welke data hierover bestaat.
 Zo is bijvoorbeeld te zien dat de meeste van de ongevallen gebeuren op gewestwegen of gemeentewegen, en niet op autostrades!
 
+Aangezien dat er voor sommige onderwerpen veel categorieën bestaan, geven we de mogelijkheid om bepaalde waardes
+te deselecteren, om zo makkelijker verschillen te zien.
+
 ```js
 const type_gewonden_ongeval = await FileAttachment("data/line_chart/type_gewonden_ongeval.json").json();
 const distinct_type_victim = [...new Set(type_gewonden_ongeval.map(d => d.class))];
