@@ -13,9 +13,10 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
         
-      - name: Fetch Dataset
+      - name: Fetch Datasets
         run: |
              wget http://r8r.be/dv_dataset -O docs/data/OPENDATA_MAP_2017-2022.csv.gz
+             wget https://r8r.be/dv_gemeentes -O docs/data/Gemeenten_Fusies.json
 
       - name: Install Numpy
         run: |
