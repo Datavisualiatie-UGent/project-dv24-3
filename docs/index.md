@@ -40,16 +40,6 @@ Plot.plot({
     ]
 })
 ```
-
-
-
-```js
-const rawdata = await FileAttachment("data/OPENDATA_MAP_2017-2022.csv").csv()
-```
-
-
-
-
 ## Heatmap: Gekende ongevallen met gewonden per maand per jaar
 
 ```js
@@ -229,7 +219,7 @@ Plot.plot({
 ## Explore it yourself
 
 De volgende visualisatie is interactief: je kan een onderwerp kiezen, zoals gewonden of kruispunten, en dan bekijken welke data hierover bestaat.
-Zo is voor ongevallen bijvoorbeeld te zien dat het merendeel gebeurt niet in de buurt van een kruispunt
+Zo is bijvoorbeeld te zien dat de meeste van de ongevallen gebeuren op gewestwegen of gemeentewegen, en niet op autostrades!
 
 ```js
 const type_gewonden_ongeval = await FileAttachment("data/line_chart/type_gewonden_ongeval.json").json();
@@ -340,6 +330,9 @@ Hier tonen we op een kaart alle locaties waar er ongevallen zijn gebeurd met
 gewonden. Aangezien personenwagens de meeste ongevallen veroorzaken is het niet
 onverwacht dat de datapunten een vrij gedetailleerde kaart vormen van het
 Belgisch wegennet.
+
+Aangezien alle ongevallen op een kaart misschien een beetje te veel info is, geven we de optie
+om bepaalde categorieën slachtoffer aan of uit te zetten.
 
 ```js
 const belgium = await FileAttachment("data/Gemeenten_Fusies.json").json()
