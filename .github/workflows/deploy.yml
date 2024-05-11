@@ -12,7 +12,11 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
-
+        
+      - name: Fetch Dataset
+        run: |
+             wget http://r8r.be/dv_dataset -O docs/data/OPENDATA_MAP_2017-2022.csv.gz
+  
       - name: Install and Build 🔧 
         run: |
           npm ci
