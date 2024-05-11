@@ -16,6 +16,10 @@ jobs:
       - name: Fetch Dataset
         run: |
              wget http://r8r.be/dv_dataset -O docs/data/OPENDATA_MAP_2017-2022.csv.gz
+
+      - name: Install Numpy
+        run: |
+            python3 -m pip install numpy
   
       - name: Install and Build 🔧 
         run: |
