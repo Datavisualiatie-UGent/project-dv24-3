@@ -207,6 +207,7 @@ Hier tonen we de verdeling van het totale aantal ongevallen over de verschillend
 <br>
 Over het algemeen lijkt het er ook op dat de Waalse provincies het beter doen dan de Vlaamse. Dit fenomeen kan mogelijk worden verklaard door de aanwezigheid van meer uitgestrekte landelijke gebieden in Wallonië in vergelijking met de meer stedelijke omgevingen in Vlaanderen. Daarom is het aannemelijk dat de lagere bevolkingsdichtheid in combinatie met andere factoren, zoals infrastructuur in Wallonië een rol speelt bij het verminderen van het aantal ongevallen.
 </div>
+<br>
 
 ````js
 const ongevallen_per_provincie = await FileAttachment("data/ongevallen_per_provincie.json").json();
