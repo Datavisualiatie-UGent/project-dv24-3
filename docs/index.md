@@ -432,7 +432,19 @@ view(map(input));
 ```
 
 
-## TODO: Correlatiematrix?
+## Verbanden tussen de variabelen
+
+Om verder inzicht te krijgen in de dataset hebben we ook een correlatiematrix
+berekend voor de verschillende variabelen gegeven voor elk ongeval. Een
+correlatiematrix is een manier om de mogelijke verbanden tussen parameters in
+een dataset te visualiseren. Hoe dichter de waarde bij 1 of -1 ligt, hoe
+sterker gecorreleerd de parameters zijn, en hoe meer ze elkaar beïnvloeden.
+
+Hier zien we echter wel dat er zeer weinig correlatie is tussen de
+verschillende parameters. De enige ietwat betekenisvolle correlatie die we
+kunnen zien is deze tussen het type weg en of het ongeval plaatsvond in de
+bebouwde kom. Dit kan verklaard worden doordat binnen de bebouwde kom er geen
+snelwegen zijn, en voornamelijk gemeentewegen.
 
 ```js
 const correlaties = await FileAttachment("data/correlaties.json").json();
