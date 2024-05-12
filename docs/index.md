@@ -15,13 +15,9 @@ import {legend, color_mapping, add_color_to_data} from "./components/legends.js"
 const ongevallen_per_jaar = await FileAttachment("data/ongevallen_gewonden_jaar.json").json();
 ```
 
-Jammer genoeg zijn er elk jaar nog veel ongevallen. Het statistiekbureau van België StatBel biedt een [dataset](https://statbel.fgov.be/nl/open-data/geolocalisatie-van-de-verkeersongevallen-2017-2022)
-aan waarin verkeersongevallen opgelijst staan van 2017 tot 2022. De dataset is gebaseerd op ongevallen geregistreerd door federale politie, dus het is mogelijk dat sommige ongevallen niet in deze dataset vervat zitten.
-Het doel van deze visualisatie is meer inzicht creëren in de data, en aantonen waar eventueel veiligere situaties moeten voorzien worden.
+Helaas blijven er jaarlijks nog steeds tal van ongevallen plaatsvinden. StatBel, het Belgische statistiekbureau, biedt een [dataset](https://statbel.fgov.be/nl/open-data/geolocalisatie-van-de-verkeersongevallen-2017-2022) aan die verkeersongevallen van 2017 tot 2022 opsomt. Deze dataset is samengesteld op basis van ongevallen geregistreerd door de federale politie, maar het is belangrijk om te vermelden dat de dataset enkel ongevallen bevat waar doden of gewonden waren. Het doel van deze visualisatie is meer inzicht creëren in de data, en aantonen waar eventueel veiligere situaties moeten voorzien worden.
 
-
-Een eerste duidelijke trend is al zichtbaar op de eerste grafiek: beduidend minder ongevallen in 2020. Hier is een eenvoudige verklaring voor: Corona.
-Iedereen werd verzocht om zoveel mogelijk thuis te blijven en van thuis te werken. Het gevolg was dat er veel minder mensen op de baan waren, en er dus veel minder ongevallen zijn.
+Een opvallende trend wordt direct duidelijk in de eerste grafiek: aanzienlijk minder ongevallen in 2020. De verklaring hiervoor is eenvoudig: de coronapandemie. Mensen werden aangemoedigd om zoveel mogelijk thuis te blijven en vanuit huis te werken. Hierdoor waren er veel minder voertuigen op de weg, wat resulteerde in aanzienlijk minder ongevallen.
 
 
 ```js
@@ -52,13 +48,9 @@ const colorScheme = [
 ];
 ```
 
-Onderstaande visualisatie toont het aantal ongevallen per maand doorheen de jaren.
-Hierbij hebben we gekozen voor een heatmap om de relatieve frequenties van
-ongevallen in verschillende periodes in één oogopslag te kunnen vergelijken.
+De volgende visualisatie presenteert het aantal ongevallen per maand over de jaren heen. Voor deze weergave hebben we geopteerd voor een heatmap, waardoor de relatieve frequenties van ongevallen in verschillende periodes in één oogopslag kunnen worden vergeleken.
 
-Interessant hier is dat 2020 beduidend minder ongevallen heeft dan andere
-jaren, met april 2020 veruit het minste aantal ongevallen. Dit is natuurlijk het begin van de Covid-19 pandemie, 
-wanneer iedereen de regels strikt volgde en enkel buiten ging wanneer dit echt noodzakelijk was.
+Opmerkelijk is dat 2020 aanzienlijk minder ongevallen kent dan andere jaren, waarbij april 2020 veruit het laagste aantal ongevallen registreerde. Dit valt samen met het begin van de Covid-19-pandemie, toen mensen strikt de regels volgden en alleen naar buiten gingen wanneer dit absoluut noodzakelijk was.
 
 ````js
 Plot.plot({
@@ -84,12 +76,9 @@ Plot.plot({
 
 ## Bar chart: Aantal ongevallen per provincie 
 
-Hier visualiseren we hoe het totaal aantal ongevallen verdeeld is onder de
-verschillende provincies relatief ten opzichte van het aantal inwoners.
-Oost-Vlaanderen is de provincie met gemiddeld het meeste ongevallen per inwoner.
+Hier tonen we de verdeling van het totale aantal ongevallen over de verschillende provincies, relatief ten opzichte van het aantal inwoners. Opmerkelijk is dat Oost-Vlaanderen gemiddeld het hoogste aantal ongevallen per inwoner heeft.
 
-Over het algemeen lijkt het ook dat de Waalse provincies het beter doen dan de Vlaamse. Dit kan natuurlijk komen 
-doordat in Vlaanderen meer grote steden zijn, en dat hierrond meer accidenten gebeuren.
+Over het algemeen lijkt het er ook op dat de Waalse provincies het beter doen dan de Vlaamse. Dit fenomeen kan mogelijk worden verklaard door de aanwezigheid van meer uitgestrekte landelijke gebieden in Wallonië in vergelijking met de meer stedelijke omgevingen in Vlaanderen. Daarom is het aannemelijk dat de lagere bevolkingsdichtheid in combinatie met andere factoren, zoals infrastructuur in Wallonië een rol speelt bij het verminderen van het aantal ongevallen.
 
 ````js
 const ongevallen_per_provincie = await FileAttachment("data/ongevallen_per_provincie.json").json();
@@ -182,7 +171,7 @@ met een andere personenwagen, een fietser, of een hindernis. Dit laatste
 betekent dat de personenwagen niet tegen een ander voertuig is gereden, maar
 tegen een object of gebouw.
 
-Daarnaast is het ook zichtbaar dat fietser een grote groep van primaire bestuurders zijn.
+Daarnaast is het ook zichtbaar dat fietsers een grote groep van primaire bestuurders zijn.
 Deze hebben dan hoofdzakelijk ongevallen met personenwagens en andere fietsers
 
 
@@ -218,11 +207,9 @@ Plot.plot({
 
 ## Explore it yourself
 
-De volgende visualisatie is interactief: je kan een onderwerp kiezen, zoals gewonden of kruispunten, en dan bekijken welke data hierover bestaat.
-Zo is bijvoorbeeld te zien dat de meeste van de ongevallen gebeuren op gewestwegen of gemeentewegen, en niet op autostrades!
+De volgende visualisatie is interactief: je hebt de mogelijkheid om een onderwerp te kiezen, zoals gewonden of kruispunten, en vervolgens de beschikbare gegevens hierover te verkennen. Een interessante observatie is bijvoorbeeld dat het merendeel van de ongevallen plaatsvindt op gewestwegen of gemeentewegen, en niet op autosnelwegen!
 
-Aangezien dat er voor sommige onderwerpen veel categorieën bestaan, geven we de mogelijkheid om bepaalde waardes
-te deselecteren, om zo makkelijker verschillen te zien.
+Aangezien sommige onderwerpen een groot aantal categorieën hebben, bieden we de optie om specifieke waarden uit te schakelen, waardoor het eenvoudiger wordt om verschillen te identificeren.
 
 ```js
 const type_gewonden_ongeval = await FileAttachment("data/line_chart/type_gewonden_ongeval.json").json();
@@ -329,13 +316,9 @@ const values_checkbox = Generators.input(checkbox_input);
 
 ## Kaart: Type slachtoffer met locatie
 
-Hier tonen we op een kaart alle locaties waar er ongevallen zijn gebeurd met
-gewonden. Aangezien personenwagens de meeste ongevallen veroorzaken is het niet
-onverwacht dat de datapunten een vrij gedetailleerde kaart vormen van het
-Belgisch wegennet.
+Hier presenteren we op een kaart alle locaties waar ongevallen met gewonden hebben plaatsgevonden. Aangezien personenwagens verantwoordelijk zijn voor het merendeel van deze ongevallen, is het niet verrassend dat de datapunten een gedetailleerd beeld vormen van het Belgische wegennet.
 
-Aangezien alle ongevallen op een kaart misschien een beetje te veel info is, geven we de optie
-om bepaalde categorieën slachtoffer aan of uit te zetten.
+Aangezien de weergave van alle ongevallen op één kaart wellicht wat overweldigend kan zijn, bieden we de mogelijkheid om specifieke categorieën van slachtoffers in of uit te schakelen.
 
 ```js
 const belgium = await FileAttachment("data/Gemeenten_Fusies.json").json()
