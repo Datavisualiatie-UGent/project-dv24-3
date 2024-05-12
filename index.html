@@ -15,7 +15,6 @@
 <link rel="modulepreload" href="./_npm/proj4@2.11.0/_esm.js">
 <link rel="modulepreload" href="./_import/components/legends.61a35010.js">
 <link rel="modulepreload" href="./_npm/d3@7.9.0/_esm.js">
-<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/_esm.js">
 <link rel="modulepreload" href="./_observablehq/stdlib/inputs.js">
 <link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.14/_esm.js">
 <link rel="modulepreload" href="./_npm/topojson-client@3.1.0/_esm.js">
@@ -32,6 +31,7 @@
 <link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/_esm.js">
 <link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/_esm.js">
 <link rel="modulepreload" href="./_npm/d3-drag@3.0.0/_esm.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/_esm.js">
 <link rel="modulepreload" href="./_npm/d3-ease@3.0.1/_esm.js">
 <link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/_esm.js">
 <link rel="modulepreload" href="./_npm/d3-force@3.0.0/_esm.js">
@@ -62,21 +62,20 @@
 import {define} from "./_observablehq/client.js";
 import {registerFile} from "./_observablehq/stdlib.js";
 
-registerFile("./data/Gemeenten_Fusies.json", {"name":"./data/Gemeenten_Fusies.json","mimeType":"application/json","path":"./_file/data/Gemeenten_Fusies.14806e67.json","lastModified":1715440661534});
-registerFile("./data/OPENDATA_MAP_2017-2022.csv", {"name":"./data/OPENDATA_MAP_2017-2022.csv","mimeType":"text/csv","path":"./data/OPENDATA_MAP_2017-2022.csv"});
-registerFile("./data/coordinaten.json", {"name":"./data/coordinaten.json","mimeType":"application/json","path":"./_file/data/coordinaten.466b1717.json","lastModified":1715440719554});
-registerFile("./data/correlaties.json", {"name":"./data/correlaties.json","mimeType":"application/json","path":"./_file/data/correlaties.71571ea3.json","lastModified":1715440722422});
-registerFile("./data/line_chart/bebouwde_kom_ongeval.json", {"name":"./data/line_chart/bebouwde_kom_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/bebouwde_kom_ongeval.69bf6ce3.json","lastModified":1715440705018});
-registerFile("./data/line_chart/kruispunt_ongeval.json", {"name":"./data/line_chart/kruispunt_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/kruispunt_ongeval.29db66d6.json","lastModified":1715440707246});
-registerFile("./data/line_chart/lichtgesteldheid_ongeval.json", {"name":"./data/line_chart/lichtgesteldheid_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/lichtgesteldheid_ongeval.5a4f3009.json","lastModified":1715440714006});
-registerFile("./data/line_chart/type_gewonden_ongeval.json", {"name":"./data/line_chart/type_gewonden_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/type_gewonden_ongeval.e61c6a10.json","lastModified":1715440702762});
-registerFile("./data/line_chart/type_weg_ongeval.json", {"name":"./data/line_chart/type_weg_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/type_weg_ongeval.aaca8169.json","lastModified":1715440716222});
-registerFile("./data/line_chart/weersomstandigheden_ongeval.json", {"name":"./data/line_chart/weersomstandigheden_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/weersomstandigheden_ongeval.5272cae6.json","lastModified":1715440709474});
-registerFile("./data/line_chart/wegconditie_ongeval.json", {"name":"./data/line_chart/wegconditie_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/wegconditie_ongeval.cc287713.json","lastModified":1715440711714});
-registerFile("./data/ongevallen_gewonden_jaar.json", {"name":"./data/ongevallen_gewonden_jaar.json","mimeType":"application/json","path":"./_file/data/ongevallen_gewonden_jaar.078bd319.json","lastModified":1715440693742});
-registerFile("./data/ongevallen_gewonden_maand_jaar.json", {"name":"./data/ongevallen_gewonden_maand_jaar.json","mimeType":"application/json","path":"./_file/data/ongevallen_gewonden_maand_jaar.dd030d62.json","lastModified":1715440695982});
-registerFile("./data/ongevallen_per_betrokken_weggebruiker.json", {"name":"./data/ongevallen_per_betrokken_weggebruiker.json","mimeType":"application/json","path":"./_file/data/ongevallen_per_betrokken_weggebruiker.13b0ca2a.json","lastModified":1715440700558});
-registerFile("./data/ongevallen_per_provincie.json", {"name":"./data/ongevallen_per_provincie.json","mimeType":"application/json","path":"./_file/data/ongevallen_per_provincie.b79a6278.json","lastModified":1715440698282});
+registerFile("./data/Gemeenten_Fusies.json", {"name":"./data/Gemeenten_Fusies.json","mimeType":"application/json","path":"./_file/data/Gemeenten_Fusies.14806e67.json","lastModified":1715520248067});
+registerFile("./data/coordinaten.json", {"name":"./data/coordinaten.json","mimeType":"application/json","path":"./_file/data/coordinaten.466b1717.json","lastModified":1715520291571});
+registerFile("./data/correlaties.json", {"name":"./data/correlaties.json","mimeType":"application/json","path":"./_file/data/correlaties.71571ea3.json","lastModified":1715520294535});
+registerFile("./data/line_chart/bebouwde_kom_ongeval.json", {"name":"./data/line_chart/bebouwde_kom_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/bebouwde_kom_ongeval.69bf6ce3.json","lastModified":1715520277059});
+registerFile("./data/line_chart/kruispunt_ongeval.json", {"name":"./data/line_chart/kruispunt_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/kruispunt_ongeval.29db66d6.json","lastModified":1715520279295});
+registerFile("./data/line_chart/lichtgesteldheid_ongeval.json", {"name":"./data/line_chart/lichtgesteldheid_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/lichtgesteldheid_ongeval.5a4f3009.json","lastModified":1715520286035});
+registerFile("./data/line_chart/type_gewonden_ongeval.json", {"name":"./data/line_chart/type_gewonden_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/type_gewonden_ongeval.e61c6a10.json","lastModified":1715520274727});
+registerFile("./data/line_chart/type_weg_ongeval.json", {"name":"./data/line_chart/type_weg_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/type_weg_ongeval.aaca8169.json","lastModified":1715520288271});
+registerFile("./data/line_chart/weersomstandigheden_ongeval.json", {"name":"./data/line_chart/weersomstandigheden_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/weersomstandigheden_ongeval.5272cae6.json","lastModified":1715520281559});
+registerFile("./data/line_chart/wegconditie_ongeval.json", {"name":"./data/line_chart/wegconditie_ongeval.json","mimeType":"application/json","path":"./_file/data/line_chart/wegconditie_ongeval.cc287713.json","lastModified":1715520283783});
+registerFile("./data/ongevallen_gewonden_jaar.json", {"name":"./data/ongevallen_gewonden_jaar.json","mimeType":"application/json","path":"./_file/data/ongevallen_gewonden_jaar.078bd319.json","lastModified":1715520265691});
+registerFile("./data/ongevallen_gewonden_maand_jaar.json", {"name":"./data/ongevallen_gewonden_maand_jaar.json","mimeType":"application/json","path":"./_file/data/ongevallen_gewonden_maand_jaar.dd030d62.json","lastModified":1715520267911});
+registerFile("./data/ongevallen_per_betrokken_weggebruiker.json", {"name":"./data/ongevallen_per_betrokken_weggebruiker.json","mimeType":"application/json","path":"./_file/data/ongevallen_per_betrokken_weggebruiker.13b0ca2a.json","lastModified":1715520272511});
+registerFile("./data/ongevallen_per_provincie.json", {"name":"./data/ongevallen_per_provincie.json","mimeType":"application/json","path":"./_file/data/ongevallen_per_provincie.b79a6278.json","lastModified":1715520270223});
 
 define({id: "a1762887", outputs: ["proj4","legend","color_mapping","add_color_to_data"], body: async () => {
 const [{default: proj4}, {legend, color_mapping, add_color_to_data}] = await Promise.all([import("./_npm/proj4@2.11.0/_esm.js"), import("./_import/components/legends.61a35010.js")]);
@@ -89,28 +88,25 @@ const ongevallen_per_jaar = await FileAttachment("./data/ongevallen_gewonden_jaa
 return {ongevallen_per_jaar};
 }});
 
-define({id: "5d7579f0", inputs: ["Plot","ongevallen_per_jaar","display"], body: async (Plot,ongevallen_per_jaar,display) => {
+define({id: "25a63a77", inputs: ["Plot","ongevallen_per_jaar","display"], body: async (Plot,ongevallen_per_jaar,display) => {
 display(await(
 Plot.plot({
-    y: {grid: true, domain: [0, 43000], label: "accidents"},
+    x: {grid: true, domain: [0, 43000], label: "accidents"},
+    height: 300,
     title: "Gekende ongevallen per jaar",
     marginTop: 0,
     insetRight: 0,
-    x: {tickFormat: ""},
+    y: {tickFormat: ""},
+    color: {scheme: "spectral", type: "ordinal"},
     marks: [
-        Plot.barY(
+        Plot.barX(
             ongevallen_per_jaar,
-            {x: "year", y:"value", tip:true}
+            {x: "value", y:"year", tip:true, fill: "year"}
         ),
-        Plot.ruleY([0])
+        Plot.ruleX([0])
     ]
 })
 ))
-}});
-
-define({id: "2ad2f578", inputs: ["FileAttachment"], outputs: ["rawdata"], body: async (FileAttachment) => {
-const rawdata = await FileAttachment("./data/OPENDATA_MAP_2017-2022.csv").csv()
-return {rawdata};
 }});
 
 define({id: "a85f2043", inputs: ["FileAttachment"], outputs: ["ongevallen_per_maand_jaar","months","colorScheme"], body: async (FileAttachment) => {
@@ -493,7 +489,7 @@ Plot.plot({
 <li class="observablehq-secondary-link"><a href="#heatmap%3A-ongevallen-per-betrokken-weggebruiker-%2F-obstakel">Heatmap: Ongevallen per betrokken weggebruiker / obstakel</a></li>
 <li class="observablehq-secondary-link"><a href="#explore-it-yourself">Explore it yourself</a></li>
 <li class="observablehq-secondary-link"><a href="#kaart%3A-type-slachtoffer-met-locatie">Kaart: Type slachtoffer met locatie</a></li>
-<li class="observablehq-secondary-link"><a href="#todo%3A-correlatiematrix%3F">TODO: Correlatiematrix?</a></li>
+<li class="observablehq-secondary-link"><a href="#verbanden-tussen-de-variabelen">Verbanden tussen de variabelen</a></li>
 </ol>
 </nav>
 </aside>
@@ -503,28 +499,17 @@ Plot.plot({
 <h1 id="verkeersongelukken" tabindex="-1"><a class="observablehq-header-anchor" href="#verkeersongelukken">Verkeersongelukken</a></h1>
 <hr>
 <div id="cell-886dafcf" class="observablehq observablehq--block"></div>
-<p>Jammer genoeg zijn er elk jaar nog veel ongevallen. Het statistiekbureau van België StatBel biedt een <a href="https://statbel.fgov.be/nl/open-data/geolocalisatie-van-de-verkeersongevallen-2017-2022" target="_blank" rel="noopener noreferrer">dataset</a>
-aan waarin verkeersongevallen opgelijst staan van 2017 tot 2022. De dataset is gebaseerd op ongevallen geregistreerd door federale politie, dus het is mogelijk dat sommige ongevallen niet in deze dataset vervat zitten.
-Het doel van deze visualisatie is meer inzicht creëren in de data, en aantonen waar eventueel veiligere situaties moeten voorzien worden.</p>
-<p>Een eerste duidelijke trend is al zichtbaar op de eerste grafiek: beduidend minder ongevallen in 2020. Hier is een eenvoudige verklaring voor: Corona.
-Iedereen werd verzocht om zoveel mogelijk thuis te blijven en van thuis te werken. Het gevolg was dat er veel minder mensen op de baan waren, en er dus veel minder ongevallen zijn.</p>
-<div id="cell-5d7579f0" class="observablehq observablehq--block observablehq--loading"></div>
-<div id="cell-2ad2f578" class="observablehq observablehq--block"></div>
+<p>Helaas blijven er jaarlijks nog steeds tal van ongevallen plaatsvinden. StatBel, het Belgische statistiekbureau, biedt een <a href="https://statbel.fgov.be/nl/open-data/geolocalisatie-van-de-verkeersongevallen-2017-2022" target="_blank" rel="noopener noreferrer">dataset</a> aan die verkeersongevallen van 2017 tot 2022 opsomt. Deze dataset is samengesteld op basis van ongevallen geregistreerd door de federale politie, maar het is belangrijk om te vermelden dat de dataset enkel ongevallen bevat waar doden of gewonden waren. Het doel van deze visualisatie is meer inzicht creëren in de data, en aantonen waar eventueel veiligere situaties moeten voorzien worden.</p>
+<p>Een opvallende trend wordt direct duidelijk in de eerste grafiek: aanzienlijk minder ongevallen in 2020. De verklaring hiervoor is eenvoudig: de coronapandemie. Mensen werden aangemoedigd om zoveel mogelijk thuis te blijven en vanuit huis te werken. Hierdoor waren er veel minder voertuigen op de weg, wat resulteerde in aanzienlijk minder ongevallen.</p>
+<div id="cell-25a63a77" class="observablehq observablehq--block observablehq--loading"></div>
 <h2 id="heatmap%3A-gekende-ongevallen-met-gewonden-per-maand-per-jaar" tabindex="-1"><a class="observablehq-header-anchor" href="#heatmap%3A-gekende-ongevallen-met-gewonden-per-maand-per-jaar">Heatmap: Gekende ongevallen met gewonden per maand per jaar</a></h2>
 <div id="cell-a85f2043" class="observablehq observablehq--block"></div>
-<p>Onderstaande visualisatie toont het aantal ongevallen per maand doorheen de jaren.
-Hierbij hebben we gekozen voor een heatmap om de relatieve frequenties van
-ongevallen in verschillende periodes in één oogopslag te kunnen vergelijken.</p>
-<p>Interessant hier is dat 2020 beduidend minder ongevallen heeft dan andere
-jaren, met april 2020 veruit het minste aantal ongevallen. Dit is natuurlijk het begin van de Covid-19 pandemie,
-wanneer iedereen de regels strikt volgde en enkel buiten ging wanneer dit echt noodzakelijk was.</p>
+<p>De volgende visualisatie presenteert het aantal ongevallen per maand over de jaren heen. Voor deze weergave hebben we geopteerd voor een heatmap, waardoor de relatieve frequenties van ongevallen in verschillende periodes in één oogopslag kunnen worden vergeleken.</p>
+<p>Opmerkelijk is dat 2020 aanzienlijk minder ongevallen kent dan andere jaren, waarbij april 2020 veruit het laagste aantal ongevallen registreerde. Dit valt samen met het begin van de Covid-19-pandemie, toen mensen strikt de regels volgden en alleen naar buiten gingen wanneer dit absoluut noodzakelijk was.</p>
 <div id="cell-a0b11e16" class="observablehq observablehq--block observablehq--loading"></div>
 <h2 id="bar-chart%3A-aantal-ongevallen-per-provincie" tabindex="-1"><a class="observablehq-header-anchor" href="#bar-chart%3A-aantal-ongevallen-per-provincie">Bar chart: Aantal ongevallen per provincie</a></h2>
-<p>Hier visualiseren we hoe het totaal aantal ongevallen verdeeld is onder de
-verschillende provincies relatief ten opzichte van het aantal inwoners.
-Oost-Vlaanderen is de provincie met gemiddeld het meeste ongevallen per inwoner.</p>
-<p>Over het algemeen lijkt het ook dat de Waalse provincies het beter doen dan de Vlaamse. Dit kan natuurlijk komen
-doordat in Vlaanderen meer grote steden zijn, en dat hierrond meer accidenten gebeuren.</p>
+<p>Hier tonen we de verdeling van het totale aantal ongevallen over de verschillende provincies, relatief ten opzichte van het aantal inwoners. Opmerkelijk is dat Oost-Vlaanderen gemiddeld het hoogste aantal ongevallen per inwoner heeft.</p>
+<p>Over het algemeen lijkt het er ook op dat de Waalse provincies het beter doen dan de Vlaamse. Dit fenomeen kan mogelijk worden verklaard door de aanwezigheid van meer uitgestrekte landelijke gebieden in Wallonië in vergelijking met de meer stedelijke omgevingen in Vlaanderen. Daarom is het aannemelijk dat de lagere bevolkingsdichtheid in combinatie met andere factoren, zoals infrastructuur in Wallonië een rol speelt bij het verminderen van het aantal ongevallen.</p>
 <div id="cell-88b22fd6" class="observablehq observablehq--block"></div>
 <div style="display:flex; height: 400px">
   <div style="flex: 0 0 60%">
@@ -559,13 +544,13 @@ Het kleur geeft aan hoeveel zo een type ongeval is geregistreerd. Opgelet: het i
 met een andere personenwagen, een fietser, of een hindernis. Dit laatste
 betekent dat de personenwagen niet tegen een ander voertuig is gereden, maar
 tegen een object of gebouw.</p>
-<p>Daarnaast is het ook zichtbaar dat fietser een grote groep van primaire bestuurders zijn.
+<p>Daarnaast is het ook zichtbaar dat fietsers een grote groep van primaire bestuurders zijn.
 Deze hebben dan hoofdzakelijk ongevallen met personenwagens en andere fietsers</p>
 <div id="cell-993d4f20" class="observablehq observablehq--block"></div>
 <div id="cell-29d3e9e1" class="observablehq observablehq--block observablehq--loading"></div>
 <h2 id="explore-it-yourself" tabindex="-1"><a class="observablehq-header-anchor" href="#explore-it-yourself">Explore it yourself</a></h2>
-<p>De volgende visualisatie is interactief: je kan een onderwerp kiezen, zoals gewonden of kruispunten, en dan bekijken welke data hierover bestaat.
-Zo is voor ongevallen bijvoorbeeld te zien dat het merendeel gebeurt niet in de buurt van een kruispunt</p>
+<p>De volgende visualisatie is interactief: je hebt de mogelijkheid om een onderwerp te kiezen, zoals gewonden of kruispunten, en vervolgens de beschikbare gegevens hierover te verkennen. Een interessante observatie is bijvoorbeeld dat het merendeel van de ongevallen plaatsvindt op gewestwegen of gemeentewegen, en niet op autosnelwegen!</p>
+<p>Aangezien sommige onderwerpen een groot aantal categorieën hebben, bieden we de optie om specifieke waarden uit te schakelen, waardoor het eenvoudiger wordt om verschillen te identificeren.</p>
 <div id="cell-8c11564b" class="observablehq observablehq--block"></div>
 <div id="cell-0eca3825" class="observablehq observablehq--block"></div>
 <div id="cell-f7b34bee" class="observablehq observablehq--block"></div>
@@ -584,21 +569,29 @@ Zo is voor ongevallen bijvoorbeeld te zien dat het merendeel gebeurt niet in de 
   </div>
 </div>
 <h2 id="kaart%3A-type-slachtoffer-met-locatie" tabindex="-1"><a class="observablehq-header-anchor" href="#kaart%3A-type-slachtoffer-met-locatie">Kaart: Type slachtoffer met locatie</a></h2>
-<p>Hier tonen we op een kaart alle locaties waar er ongevallen zijn gebeurd met
-gewonden. Aangezien personenwagens de meeste ongevallen veroorzaken is het niet
-onverwacht dat de datapunten een vrij gedetailleerde kaart vormen van het
-Belgisch wegennet.</p>
+<p>Hier presenteren we op een kaart alle locaties waar ongevallen met gewonden hebben plaatsgevonden. Aangezien personenwagens verantwoordelijk zijn voor het merendeel van deze ongevallen, is het niet verrassend dat de datapunten een gedetailleerd beeld vormen van het Belgische wegennet.</p>
+<p>Aangezien de weergave van alle ongevallen op één kaart wellicht wat overweldigend kan zijn, bieden we de mogelijkheid om specifieke categorieën van slachtoffers in of uit te schakelen.</p>
 <div id="cell-c8d157c8" class="observablehq observablehq--block"></div>
 <div id="cell-ae43fe47" class="observablehq observablehq--block"></div>
 <div id="cell-4ff3d98e" class="observablehq observablehq--block"></div>
 <div id="cell-8bc44eaa" class="observablehq observablehq--block"></div>
 <div id="cell-be5cab4a" class="observablehq observablehq--block"></div>
 <div id="cell-a3b7b342" class="observablehq observablehq--block"></div>
-<h2 id="todo%3A-correlatiematrix%3F" tabindex="-1"><a class="observablehq-header-anchor" href="#todo%3A-correlatiematrix%3F">TODO: Correlatiematrix?</a></h2>
+<h2 id="verbanden-tussen-de-variabelen" tabindex="-1"><a class="observablehq-header-anchor" href="#verbanden-tussen-de-variabelen">Verbanden tussen de variabelen</a></h2>
+<p>Om verder inzicht te krijgen in de dataset hebben we ook een correlatiematrix
+berekend voor de verschillende variabelen gegeven voor elk ongeval. Een
+correlatiematrix is een manier om de mogelijke verbanden tussen parameters in
+een dataset te visualiseren. Hoe dichter de waarde bij 1 of -1 ligt, hoe
+sterker gecorreleerd de parameters zijn, en hoe meer ze elkaar beïnvloeden.</p>
+<p>Hier zien we echter wel dat er zeer weinig correlatie is tussen de
+verschillende parameters. De enige ietwat betekenisvolle correlatie die we
+kunnen zien is deze tussen het type weg en of het ongeval plaatsvond in de
+bebouwde kom. Dit kan verklaard worden doordat binnen de bebouwde kom er geen
+snelwegen zijn, en voornamelijk gemeentewegen.</p>
 <div id="cell-4bd08fcd" class="observablehq observablehq--block"></div>
 <div id="cell-cfa07cd6" class="observablehq observablehq--block observablehq--loading"></div>
 </main>
 <footer id="observablehq-footer">
-<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-05-11T15:18:06">May 11, 2024</a>.</div>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2024-05-12T13:24:16">May 12, 2024</a>.</div>
 </footer>
 </div>
