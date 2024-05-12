@@ -1,33 +1,41 @@
 ---
-theme: light
+theme: air
 toc: true
 ---
+
 ````js
 import proj4 from "npm:proj4";
 import {legend, color_mapping, add_color_to_data} from "./components/legends.js"
 ````
 
-# Verkeersongelukken
----
+<div style="width: 80%; background-color: #F0F0F0; padding : 15px; padding-left: 25px">
+<h1>Verkeersongelukken</h1>
+<p style="font-size: 12px">Door Robbe Van Rijsselberghe, Emma Neirinck & Jef Roosens</p>
+<div style = "width: 100%">
+Helaas blijven er jaarlijks nog steeds tal van ongevallen plaatsvinden. StatBel, het Belgische statistiekbureau, biedt een <a href="https://statbel.fgov.be/nl/open-data/geolocalisatie-van-de-verkeersongevallen-2017-2022">dataset</a> aan die verkeersongevallen van 2017 tot 2022 opsomt. Deze dataset is samengesteld op basis van ongevallen geregistreerd door de federale politie, maar het is belangrijk om te vermelden dat de dataset enkel ongevallen bevat waar doden of gewonden waren. Het doel van deze visualisatie is meer inzicht creëren in de data, en aantonen waar eventueel veiligere situaties moeten voorzien worden.
+</div>
 
+</div>
+<br>
+<br>
 
 ```js
 const ongevallen_per_jaar = await FileAttachment("data/ongevallen_gewonden_jaar.json").json();
 ```
 
-Helaas blijven er jaarlijks nog steeds tal van ongevallen plaatsvinden. StatBel, het Belgische statistiekbureau, biedt een [dataset](https://statbel.fgov.be/nl/open-data/geolocalisatie-van-de-verkeersongevallen-2017-2022) aan die verkeersongevallen van 2017 tot 2022 opsomt. Deze dataset is samengesteld op basis van ongevallen geregistreerd door de federale politie, maar het is belangrijk om te vermelden dat de dataset enkel ongevallen bevat waar doden of gewonden waren. Het doel van deze visualisatie is meer inzicht creëren in de data, en aantonen waar eventueel veiligere situaties moeten voorzien worden.
 
-Een opvallende trend wordt direct duidelijk in de eerste grafiek: aanzienlijk minder ongevallen in 2020. De verklaring hiervoor is eenvoudig: de coronapandemie. Mensen werden aangemoedigd om zoveel mogelijk thuis te blijven en vanuit huis te werken. Hierdoor waren er veel minder voertuigen op de weg, wat resulteerde in aanzienlijk minder ongevallen.
-
+### Aantal ongevallen met gewonden of doden per jaar
+<div style="width: 80%;">
+    Een opvallende trend wordt direct duidelijk in de eerste grafiek: aanzienlijk minder ongevallen in 2020. De verklaring hiervoor is eenvoudig: de coronapandemie. Mensen werden aangemoedigd om zoveel mogelijk thuis te blijven en vanuit huis te werken. Hierdoor waren er veel minder voertuigen op de weg, wat resulteerde in aanzienlijk minder ongevallen.
+</div>
 
 ```js
 Plot.plot({
-    x: {grid: true, domain: [0, 43000], label: "accidents"},
+    x: {grid: true, domain: [0, 43000], label: "Aantal ongevallen"},
+    y: {label: "Jaar", tickFormat: ""},
     height: 300,
-    title: "Gekende ongevallen per jaar",
     marginTop: 0,
-    insetRight: 0,
-    y: {tickFormat: ""},
+    marginLeft: 50,
     color: {scheme: "spectral", type: "ordinal"},
     marks: [
         Plot.barX(
@@ -38,7 +46,10 @@ Plot.plot({
     ]
 })
 ```
-## Heatmap: Gekende ongevallen met gewonden per maand per jaar
+<br>
+<br>
+
+### Aantal ongevallen met gewonden of doden per maand per jaar
 
 ```js
 const ongevallen_per_maand_jaar = await FileAttachment("data/ongevallen_gewonden_maand_jaar.json").json();
@@ -49,38 +60,153 @@ const colorScheme = [
 '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'
 ];
 ```
+<div style="display:flex; width: 80%">
+  <div style="flex: 0 0 60%">
+  <br>
+  <br>
+  De volgende visualisatie presenteert het aantal ongevallen per maand over de jaren heen. Voor deze weergave hebben we geopteerd voor een heatmap, waardoor de relatieve frequenties van ongevallen in verschillende periodes in één oogopslag kunnen worden vergeleken.
 
-De volgende visualisatie presenteert het aantal ongevallen per maand over de jaren heen. Voor deze weergave hebben we geopteerd voor een heatmap, waardoor de relatieve frequenties van ongevallen in verschillende periodes in één oogopslag kunnen worden vergeleken.
+  Opmerkelijk is dat 2020 aanzienlijk minder ongevallen kent dan andere jaren, waarbij april 2020 veruit het laagste aantal ongevallen registreerde. Dit valt samen met het begin van de Covid-19-pandemie, toen mensen strikt de regels volgden en alleen naar buiten gingen wanneer dit absoluut noodzakelijk was.
 
-Opmerkelijk is dat 2020 aanzienlijk minder ongevallen kent dan andere jaren, waarbij april 2020 veruit het laagste aantal ongevallen registreerde. Dit valt samen met het begin van de Covid-19-pandemie, toen mensen strikt de regels volgden en alleen naar buiten gingen wanneer dit absoluut noodzakelijk was.
+  Verder valt ook op dat er een duidelijke daling te zien is in het aantal ongevallen vanaf juli en augustus, gedurende alle jaren. Deze neerwaartse trend kan worden toegeschreven aan de zomervakantieperiode, waarin veel mensen ervoor kiezen om hun vakantiedagen op te nemen. Het gevolg hiervan is dat er minder verkeer op de wegen is, waardoor het risico op ongevallen aanzienlijk vermindert.
 
-````js
-Plot.plot({
-    title: "Gekende ongevallen per jaar per maand",
-    width: 350,
-    height: 600,
-    color: {legend: true, scheme: "Oranges"},
-    marginTop: 0,
-    aspectRatio: 1,
-    xscale: "band",
-    x: {type: "band", label: "Jaar", tickFormat: ""},
-    y: {
-        domain: months,
-        label: "Maand"},
-    marks: [
-        Plot.cell(
-            ongevallen_per_maand_jaar,
-            {x: "year", y: "month", fill: "value", tip: {format: {x: (y) => `${y}`, y: true, value: true}}}
-        )
-    ]
-})
-````
+  </div>
+  <div>
+    ${Plot.plot({
+       width: 350,
+      height: 600,
+      color: {legend: true, scheme: "Oranges"},
+      marginTop: 0,
+      aspectRatio: 1,
+      xscale: "band",
+      x: {type: "band", label: "Jaar", tickFormat: ""},
+      y: {
+          domain: months,
+          label: "Maand"},
+      marks: [
+          Plot.cell(
+              ongevallen_per_maand_jaar,
+              {x: "year", y: "month", fill: "value", tip: {format: {x: (y) => `${y}`, y: true, value: true}}}
+          )
+      ]
+    })}
+  </div>
+</div>
 
-## Bar chart: Aantal ongevallen per provincie 
+<br>
+<br>
 
+### Geolocaties ongevallen
+
+<div style="width: 80%">
+Hier presenteren we op een kaart alle locaties waar ongevallen met gewonden hebben plaatsgevonden. Aangezien personenwagens verantwoordelijk zijn voor het merendeel van deze ongevallen, is het niet verrassend dat de datapunten een gedetailleerd beeld vormen van het Belgische wegennet.
+Aangezien de weergave van alle ongevallen op één kaart wellicht wat overweldigend kan zijn, bieden we de mogelijkheid om specifieke categorieën van slachtoffers in of uit te schakelen.
+</div>
+
+```js
+const belgium = await FileAttachment("data/Gemeenten_Fusies.json").json()
+const coordinates = await FileAttachment("data/coordinaten.json").json()
+```
+
+```js
+proj4.defs("EPSG:31370", "+proj=lcc +lat_0=90 +lon_0=4.36748666666667 +lat_1=51.1666672333333 +lat_2=49.8333339 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,-0.3366,0.457,-1.8422,-1.2747 +units=m +no_defs +type=crs");
+
+for (const type of coordinates.distinct_types) {
+    coordinates.coordinates[type] = coordinates.coordinates[type].map(d => {
+        const transformed = proj4('EPSG:31370', 'EPSG:4326', [d.x, d.y]);
+
+        return {x: transformed[0], y: transformed[1]};
+    });
+}
+```
+
+```js
+const colorScale = d3.scaleOrdinal()
+        .domain(coordinates.distinct_types)
+        .range(d3.schemeCategory10);
+```
+
+```js
+function map(value) {
+  const width = 800;
+  const height = 600;
+  const r = 1.5;
+  const projection = d3.geoMercator().fitSize([width, height], topojson.feature(belgium, belgium.objects.Gemeenten));
+  const canvas = d3.create("canvas")
+      .attr("width", width)
+      .attr("height", height);
+  const context = canvas.node().getContext('2d');
+  const path = d3.geoPath(null, context).projection(projection);
+
+  d3.select(context.canvas).call(d3.zoom()
+      .scaleExtent([1, 8])
+      .on("zoom", ({transform}) => zoomed(transform)));
+
+  function zoomed(transform) {
+    context.save();
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = "#F0F0F0";
+    context.fillRect(0, 0, width, height);
+    context.translate(transform.x, transform.y);
+    context.scale(transform.k, transform.k);
+    context.canvas.style.maxWidth = "100%";
+    context.lineJoin = "round";
+    context.lineCap = "round";
+
+    context.beginPath();
+    path(topojson.feature(belgium, belgium.objects.Gemeenten));
+    context.fillStyle = "lightgray";
+    context.fill();
+
+    context.beginPath();
+    path(topojson.feature(belgium, belgium.objects.Gemeenten, (a, b) => a !== b ));
+    context.lineWidth = 0.5;
+    context.strokeStyle = "white";
+    context.stroke();
+
+    for (const type of coordinates.distinct_types) {
+        if (value.includes(type)) {
+            for (const obj of coordinates.coordinates[type]) {
+                context.beginPath();
+                context.fillStyle = colorScale(type);
+                const [proj_x, proj_y] = projection([obj.x, obj.y]);
+                context.moveTo(proj_x + r, proj_y);
+                context.arc(proj_x, proj_y, r, 0, 2 * Math.PI);
+                context.fill();
+            }
+        }
+    }
+    
+    context.restore();
+  }
+
+  zoomed(d3.zoomIdentity);
+
+  return context.canvas;
+}
+```
+
+```js
+const input = view(Inputs.checkbox(coordinates.distinct_types, {
+  description: 'Choose the type to display on the map',
+  value: coordinates.distinct_types
+}));
+```
+
+```js
+view(map(input));
+```
+
+<br>
+<br>
+
+### Aantal ongevallen per provincie 
+
+<div style="width: 80%">
 Hier tonen we de verdeling van het totale aantal ongevallen over de verschillende provincies, relatief ten opzichte van het aantal inwoners. Opmerkelijk is dat Oost-Vlaanderen gemiddeld het hoogste aantal ongevallen per inwoner heeft.
-
+<br>
 Over het algemeen lijkt het er ook op dat de Waalse provincies het beter doen dan de Vlaamse. Dit fenomeen kan mogelijk worden verklaard door de aanwezigheid van meer uitgestrekte landelijke gebieden in Wallonië in vergelijking met de meer stedelijke omgevingen in Vlaanderen. Daarom is het aannemelijk dat de lagere bevolkingsdichtheid in combinatie met andere factoren, zoals infrastructuur in Wallonië een rol speelt bij het verminderen van het aantal ongevallen.
+</div>
 
 ````js
 const ongevallen_per_provincie = await FileAttachment("data/ongevallen_per_provincie.json").json();
@@ -99,7 +225,6 @@ const mapped_colors = color_mapping(sorted_provincies, colorScheme);
   <div style="flex: 0 0 60%">
     ${Plot.plot({
     aspectRatio: 1,
-    insetRight: 50,
   marks: [
     Plot.cell(
         units,
@@ -116,18 +241,22 @@ const mapped_colors = color_mapping(sorted_provincies, colorScheme);
 })}
   </div>
   <div style="flex: 0 0 20%">
-  <h3>1 unit = 1000 accidents</h3>
+    <b>Legende</b>
     ${legend(mapped_colors)}
   </div>
 </div>
 
-### Ongevallen per capita
+<br>
+<br>
 
+### Ongevallen per capita
+<div style="width: 80%">
 Bovenstaande waffle chart toont de absolute aantallen van ongevallen verdeeld
 over de verschillende provincies. Dit kan echter een vertekend beeld geven,
 aangezien niet elke provincie even groot is, waardoor grotere provincies er dus
 slechter kunnen uitzien door het hogere aantal ongevallen.
-
+<br>
+<br>
 Onderstaande grafiek vergelijkt de ongevallen per capita, verrekend met de
 bevolkingsaantallen van elke provincie voor het jaar 2021. Hier zien we wederom
 de duidelijke daling in ongevallen in het jaar 2020. Wat we echter ook kunnen
@@ -136,6 +265,7 @@ ongevallen per capita hebben dan de andere provincies. Henegeouwen bijvoorbeeld
 was volgende de absolute aantallen de slechtste leerling na de drie grote
 provincies, maar per capita is het samen met Vlaams- en Waals-Brabant een van
 de laagst-scorende provincies.
+</div>
 
 ```js
 Plot.plot({
@@ -160,22 +290,25 @@ Plot.plot({
 })
 ```
 
-## Heatmap: Ongevallen per betrokken weggebruiker / obstakel
+<br>
+<br>
 
+### Ongevallen per betrokken weggebruiker / obstakel
+<div style="width: 80%">
 De dataset bevat voor elk ongeval ook informatie over de twee betrokken
 partijen. Met onderstaande heatmap visualiseren we welke combinaties van
 partijen er het vaakst voorkomen in de dataset. Op de X as staat de primaire bestuurder.
 Dit is de bestuurder die een ongeval heeft gehad. Op de Y as staan andere betrokken bestuurders of obstakels.
 Het kleur geeft aan hoeveel zo een type ongeval is geregistreerd. Opgelet: het is een logaritmische kleurschaal.
-
+<br>
+<br>
 Hier zien we dat de personenwagen veruit de grootste partij is, gecombineerd
 met een andere personenwagen, een fietser, of een hindernis. Dit laatste
 betekent dat de personenwagen niet tegen een ander voertuig is gereden, maar
 tegen een object of gebouw.
-
 Daarnaast is het ook zichtbaar dat fietsers een grote groep van primaire bestuurders zijn.
 Deze hebben dan hoofdzakelijk ongevallen met personenwagens en andere fietsers
-
+</div>
 
 ```js
 const ongevallen_per_weggebruiker = await FileAttachment("data/ongevallen_per_betrokken_weggebruiker.json").json();
@@ -183,7 +316,6 @@ const ongevallen_per_weggebruiker = await FileAttachment("data/ongevallen_per_be
 
 ```js
 Plot.plot({
-    title: "betrokken weggebruikers",
     color: {legend: true, scheme: "Oranges", type: "log"},
     aspectRatio: 2.5,
     marginTop: 0,
@@ -206,12 +338,15 @@ Plot.plot({
 })
 ```
 
+<br>
+<br>
 
-## Explore it yourself
-
+### Explore it yourself
+<div style="width: 80%">
 De volgende visualisatie is interactief: je hebt de mogelijkheid om een onderwerp te kiezen, zoals gewonden of kruispunten, en vervolgens de beschikbare gegevens hierover te verkennen. Een interessante observatie is bijvoorbeeld dat het merendeel van de ongevallen plaatsvindt op gewestwegen of gemeentewegen, en niet op autosnelwegen!
-
+<br>
 Aangezien sommige onderwerpen een groot aantal categorieën hebben, bieden we de optie om specifieke waarden uit te schakelen, waardoor het eenvoudiger wordt om verschillen te identificeren.
+</div>
 
 ```js
 const type_gewonden_ongeval = await FileAttachment("data/line_chart/type_gewonden_ongeval.json").json();
@@ -291,8 +426,10 @@ const values_checkbox = Generators.input(checkbox_input);
 
 <div style="display:flex; height: 500px; padding-top: 20px">
   <div style="flex: 0 0 20%; padding-right: 20px;">
+    <b>Selecteer type metadata</b>
     ${view(select_input)}
     <div style="padding-top: 20px;"></div>
+    <b>Kies zichtbare waarden</b>
     ${view(checkbox_input)}
   </div>
   <div style="flex: 1;">
@@ -310,124 +447,29 @@ const values_checkbox = Generators.input(checkbox_input);
     })}
   </div>
   <div style="flex: 0 0 20%; padding-left: 20px; padding-top: 20px">
+    <b>Legende</b>
     ${legend(legend_selector[value_select])}
   </div>
 </div>
 
+<br>
+<br>
 
-
-## Kaart: Type slachtoffer met locatie
-
-Hier presenteren we op een kaart alle locaties waar ongevallen met gewonden hebben plaatsgevonden. Aangezien personenwagens verantwoordelijk zijn voor het merendeel van deze ongevallen, is het niet verrassend dat de datapunten een gedetailleerd beeld vormen van het Belgische wegennet.
-
-Aangezien de weergave van alle ongevallen op één kaart wellicht wat overweldigend kan zijn, bieden we de mogelijkheid om specifieke categorieën van slachtoffers in of uit te schakelen.
-
-```js
-const belgium = await FileAttachment("data/Gemeenten_Fusies.json").json()
-const coordinates = await FileAttachment("data/coordinaten.json").json()
-```
-
-```js
-proj4.defs("EPSG:31370", "+proj=lcc +lat_0=90 +lon_0=4.36748666666667 +lat_1=51.1666672333333 +lat_2=49.8333339 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.8686,52.2978,-103.7239,-0.3366,0.457,-1.8422,-1.2747 +units=m +no_defs +type=crs");
-
-for (const type of coordinates.distinct_types) {
-    coordinates.coordinates[type] = coordinates.coordinates[type].map(d => {
-        const transformed = proj4('EPSG:31370', 'EPSG:4326', [d.x, d.y]);
-
-        return {x: transformed[0], y: transformed[1]};
-    });
-}
-```
-
-```js
-const colorScale = d3.scaleOrdinal()
-        .domain(coordinates.distinct_types)
-        .range(d3.schemeCategory10);
-```
-
-```js
-function map(value) {
-  const width = 1000;
-  const height = 800;
-  const r = 1.5;
-  const projection = d3.geoMercator().fitSize([width, height], topojson.feature(belgium, belgium.objects.Gemeenten));
-  const canvas = d3.create("canvas")
-      .attr("width", width)
-      .attr("height", height);
-  const context = canvas.node().getContext('2d');
-  const path = d3.geoPath(null, context).projection(projection);
-
-  d3.select(context.canvas).call(d3.zoom()
-      .scaleExtent([1, 8])
-      .on("zoom", ({transform}) => zoomed(transform)));
-
-  function zoomed(transform) {
-    context.save();
-    context.clearRect(0, 0, width, height);
-    context.translate(transform.x, transform.y);
-    context.scale(transform.k, transform.k);
-    context.canvas.style.maxWidth = "100%";
-    context.lineJoin = "round";
-    context.lineCap = "round";
-
-    context.beginPath();
-    path(topojson.feature(belgium, belgium.objects.Gemeenten));
-    context.fillStyle = "lightgray";
-    context.fill();
-
-    context.beginPath();
-    path(topojson.feature(belgium, belgium.objects.Gemeenten, (a, b) => a !== b ));
-    context.lineWidth = 0.5;
-    context.strokeStyle = "white";
-    context.stroke();
-
-    for (const type of coordinates.distinct_types) {
-        if (value.includes(type)) {
-            for (const obj of coordinates.coordinates[type]) {
-                context.beginPath();
-                context.fillStyle = colorScale(type);
-                const [proj_x, proj_y] = projection([obj.x, obj.y]);
-                context.moveTo(proj_x + r, proj_y);
-                context.arc(proj_x, proj_y, r, 0, 2 * Math.PI);
-                context.fill();
-            }
-        }
-    }
-    
-    context.restore();
-  }
-
-  zoomed(d3.zoomIdentity);
-
-  return context.canvas;
-}
-```
-
-```js
-const input = view(Inputs.checkbox(coordinates.distinct_types, {
-  description: 'Choose the type to display on the map',
-  value: coordinates.distinct_types
-}));
-```
-
-```js
-view(map(input));
-```
-
-
-## Verbanden tussen de variabelen
-
+### Verbanden tussen de attributen gekend bij ongeval
+<div style="width: 80%">
 Om verder inzicht te krijgen in de dataset hebben we ook een correlatiematrix
 berekend voor de verschillende variabelen gegeven voor elk ongeval. Een
 correlatiematrix is een manier om de mogelijke verbanden tussen parameters in
 een dataset te visualiseren. Hoe dichter de waarde bij 1 of -1 ligt, hoe
 sterker gecorreleerd de parameters zijn, en hoe meer ze elkaar beïnvloeden.
-
+<br>
+<br>
 Hier zien we echter wel dat er zeer weinig correlatie is tussen de
 verschillende parameters. De enige ietwat betekenisvolle correlatie die we
 kunnen zien is deze tussen het type weg en of het ongeval plaatsvond in de
 bebouwde kom. Dit kan verklaard worden doordat binnen de bebouwde kom er geen
 snelwegen zijn, en voornamelijk gemeentewegen.
+</div>
 
 ```js
 const correlaties = await FileAttachment("data/correlaties.json").json();
