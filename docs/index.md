@@ -26,17 +26,19 @@ Iedereen werd verzocht om zoveel mogelijk thuis te blijven en van thuis te werke
 
 ```js
 Plot.plot({
-    y: {grid: true, domain: [0, 43000], label: "accidents"},
+    x: {grid: true, domain: [0, 43000], label: "accidents"},
+    height: 300,
     title: "Gekende ongevallen per jaar",
     marginTop: 0,
     insetRight: 0,
-    x: {tickFormat: ""},
+    y: {tickFormat: ""},
+    color: {scheme: "spectral", type: "ordinal"},
     marks: [
-        Plot.barY(
+        Plot.barX(
             ongevallen_per_jaar,
-            {x: "year", y:"value", tip:true}
+            {x: "value", y:"year", tip:true, fill: "year"}
         ),
-        Plot.ruleY([0])
+        Plot.ruleX([0])
     ]
 })
 ```
