@@ -65,6 +65,7 @@ const colorScheme = [
   <div style="flex: 0 0 60%">
   <br>
   <br>
+  <br>
   De volgende visualisatie presenteert het aantal ongevallen per maand over de jaren heen. Voor deze weergave hebben we geopteerd voor een heatmap, waardoor de relatieve frequenties van ongevallen in verschillende periodes in één oogopslag kunnen worden vergeleken.
 
   Opmerkelijk is dat 2020 aanzienlijk minder ongevallen kent dan andere jaren, waarbij april 2020 veruit het laagste aantal ongevallen registreerde. Dit valt samen met het begin van de Covid-19-pandemie, toen mensen strikt de regels volgden en alleen naar buiten gingen wanneer dit absoluut noodzakelijk was.
@@ -197,8 +198,8 @@ const input = view(Inputs.checkbox(coordinates.distinct_types, {
 }));
 ```
 
-<div style="display:flex">
-  <div style="flex: 0 0 80%">
+<div style="display:flex; height: 600px">
+  <div style="flex: 0 0 70%">
     ${view(map(input))}
   </div>
   <div style="flex: 0 0 20%; padding-left: 30px">
@@ -438,9 +439,9 @@ const checkbox_input = Inputs.checkbox(selector[value_select].distinct, {value: 
 const values_checkbox = Generators.input(checkbox_input);
 ````
 
-<div style="display:flex; height: 500px; padding-top: 20px">
+<div style="display:flex; height: 400px; padding-top: 20px">
   <div style="flex: 0 0 20%; padding-right: 20px;">
-    <b>Selecteer type metadata</b>
+    <b>Selecteer attribuut</b>
     ${view(select_input)}
     <div style="padding-top: 20px;"></div>
     <b>Kies zichtbare waarden</b>
