@@ -125,7 +125,10 @@ for (const type of coordinates.distinct_types) {
 const colorScale = d3.scaleOrdinal()
         .domain(coordinates.distinct_types)
         .range(d3.schemeCategory10);
+console.log(colorScale)
+const legend_map = color_mapping(coordinates.distinct_types, d3.schemeCategory10);
 ```
+
 
 ```js
 function map(value) {
@@ -194,9 +197,15 @@ const input = view(Inputs.checkbox(coordinates.distinct_types, {
 }));
 ```
 
-```js
-view(map(input));
-```
+<div style="display:flex">
+  <div style="flex: 0 0 80%">
+    ${view(map(input))}
+  </div>
+  <div style="flex: 0 0 20%; padding-left: 30px">
+    <b>Legende</b>
+    ${legend(legend_map)}
+  </div>
+</div>
 
 <br>
 <br>
