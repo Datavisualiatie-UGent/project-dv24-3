@@ -24,7 +24,8 @@ const ongevallen_per_jaar = await FileAttachment("data/ongevallen_gewonden_jaar.
 ```
 
 
-### Aantal ongevallen met gewonden of doden per jaar
+## Aantal ongevallen met gewonden of doden per jaar
+
 <div style="width: 80%;">
     Een opvallende trend wordt direct duidelijk in de eerste grafiek: aanzienlijk minder ongevallen in 2020. De verklaring hiervoor is eenvoudig: de coronapandemie. Mensen werden aangemoedigd om zoveel mogelijk thuis te blijven en vanuit huis te werken. Hierdoor waren er veel minder voertuigen op de weg, wat resulteerde in aanzienlijk minder ongevallen.
 </div>
@@ -40,7 +41,7 @@ Plot.plot({
     marks: [
         Plot.barX(
             ongevallen_per_jaar,
-            {x: "value", y:"year", tip:true, fill: "year"}
+            {x: "value", y:"year", fill: "year", tip: {format: {y: (y) => `${y}`, fill: false}}}
         ),
         Plot.ruleX([0])
     ]
@@ -49,7 +50,7 @@ Plot.plot({
 <br>
 <br>
 
-### Aantal ongevallen met gewonden of doden per maand per jaar
+## Aantal ongevallen met gewonden of doden per maand per jaar
 
 ```js
 const ongevallen_per_maand_jaar = await FileAttachment("data/ongevallen_gewonden_maand_jaar.json").json();
@@ -96,7 +97,7 @@ const colorScheme = [
 <br>
 <br>
 
-### Geolocaties ongevallen
+## Geolocaties ongevallen
 
 <div style="width: 80%">
 Hier presenteren we op een kaart alle locaties waar ongevallen met gewonden hebben plaatsgevonden. Aangezien personenwagens verantwoordelijk zijn voor het merendeel van deze ongevallen, is het niet verrassend dat de datapunten een gedetailleerd beeld vormen van het Belgische wegennet.
@@ -200,7 +201,7 @@ view(map(input));
 <br>
 <br>
 
-### Aantal ongevallen per provincie 
+## Aantal ongevallen per provincie 
 
 <div style="width: 80%">
 Hier tonen we de verdeling van het totale aantal ongevallen over de verschillende provincies, relatief ten opzichte van het aantal inwoners. Opmerkelijk is dat Oost-Vlaanderen gemiddeld het hoogste aantal ongevallen per inwoner heeft.
@@ -250,7 +251,8 @@ const mapped_colors = color_mapping(sorted_provincies, colorScheme);
 <br>
 <br>
 
-### Ongevallen per capita
+## Ongevallen per capita
+
 <div style="width: 80%">
 Bovenstaande waffle chart toont de absolute aantallen van ongevallen verdeeld
 over de verschillende provincies. Dit kan echter een vertekend beeld geven,
@@ -294,7 +296,8 @@ Plot.plot({
 <br>
 <br>
 
-### Ongevallen per betrokken weggebruiker / obstakel
+## Ongevallen per betrokken weggebruiker / obstakel
+
 <div style="width: 80%">
 De dataset bevat voor elk ongeval ook informatie over de twee betrokken
 partijen. Met onderstaande heatmap visualiseren we welke combinaties van
@@ -342,7 +345,8 @@ Plot.plot({
 <br>
 <br>
 
-### Explore it yourself
+## Explore it yourself
+
 <div style="width: 80%">
 De volgende visualisatie is interactief: je hebt de mogelijkheid om een onderwerp te kiezen, zoals gewonden of kruispunten, en vervolgens de beschikbare gegevens hierover te verkennen. Een interessante observatie is bijvoorbeeld dat het merendeel van de ongevallen plaatsvindt op gewestwegen of gemeentewegen, en niet op autosnelwegen!
 <br>
@@ -456,7 +460,8 @@ const values_checkbox = Generators.input(checkbox_input);
 <br>
 <br>
 
-### Verbanden tussen de attributen gekend bij ongeval
+## Verbanden tussen de attributen gekend bij ongeval
+
 <div style="width: 80%">
 Om verder inzicht te krijgen in de dataset hebben we ook een correlatiematrix
 berekend voor de verschillende variabelen gegeven voor elk ongeval. Een
