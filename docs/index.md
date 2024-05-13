@@ -9,7 +9,7 @@ import {legend, color_mapping, add_color_to_data} from "./components/legends.js"
 ````
 
 <div style="width: 80%; background-color: #F0F0F0; padding : 15px; padding-left: 25px">
-<h1>Verkeersongelukken</h1>
+<h1>Verkeersongevallen</h1>
 <p style="font-size: 12px">Door Robbe Van Rijsselberghe, Emma Neirinck & Jef Roosens</p>
 <div style = "width: 100%">
 Helaas blijven er jaarlijks nog steeds tal van ongevallen plaatsvinden. StatBel, het Belgische statistiekbureau, biedt een <a href="https://statbel.fgov.be/nl/open-data/geolocalisatie-van-de-verkeersongevallen-2017-2022">dataset</a> aan die verkeersongevallen van 2017 tot 2022 opsomt. Deze dataset is samengesteld op basis van ongevallen geregistreerd door de federale politie, maar het is belangrijk om te vermelden dat de dataset enkel ongevallen bevat waar doden of gewonden waren. Het doel van deze visualisatie is meer inzicht creëren in de data, en aantonen waar eventueel veiligere situaties moeten voorzien worden.
