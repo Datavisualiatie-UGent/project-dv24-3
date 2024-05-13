@@ -282,10 +282,10 @@ de laagst-scorende provincies.
 
 ```js
 Plot.plot({
-  width: 800,
+  width: 1000,
   marginBottom: 50,
   marginRight: 50,
-  x: {axis: null},
+  x: {axis: null, type: "band"},
   fx: {tickRotate: 15, label: ""},
   y: {grid: true},
   color: {scheme: "spectral", legend: true, type: "ordinal"},
@@ -331,6 +331,8 @@ const ongevallen_per_weggebruiker = await FileAttachment("data/ongevallen_per_be
 ```js
 Plot.plot({
     color: {legend: true, scheme: "Oranges", type: "log"},
+    width: 800,
+    height: 600,
     aspectRatio: 2.5,
     marginTop: 0,
     marginLeft: 300,
