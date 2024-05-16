@@ -214,9 +214,9 @@ const input = view(Inputs.checkbox(coordinates.distinct_types, {
 ## Aantal ongevallen per provincie 
 
 <div style="width: 80%">
-Hier tonen we de verdeling van het totale aantal ongevallen over de verschillende provincies, relatief ten opzichte van het aantal inwoners. Opmerkelijk is dat Oost-Vlaanderen gemiddeld het hoogste aantal ongevallen per inwoner heeft.
+Hier tonen we de verdeling van het totale aantal ongevallen over de verschillende provincies. Opmerkelijk is dat alle Vlaamse provincies eerst komen, behalve Vlaams-Brabant.
 <br>
-Over het algemeen lijkt het er ook op dat de Waalse provincies het beter doen dan de Vlaamse. Dit fenomeen kan mogelijk worden verklaard door de aanwezigheid van meer uitgestrekte landelijke gebieden in Wallonië in vergelijking met de meer stedelijke omgevingen in Vlaanderen. Daarom is het aannemelijk dat de lagere bevolkingsdichtheid in combinatie met andere factoren, zoals infrastructuur in Wallonië een rol speelt bij het verminderen van het aantal ongevallen.
+Over het algemeen lijkt het er op dat de Waalse provincies het beter doen dan de Vlaamse. Dit fenomeen kan mogelijk worden verklaard door de aanwezigheid van meer uitgestrekte landelijke gebieden in Wallonië in vergelijking met de meer stedelijke omgevingen in Vlaanderen. Daarom is het aannemelijk dat de lagere bevolkingsdichtheid in combinatie met andere factoren, zoals infrastructuur in Wallonië een rol speelt bij het verminderen van het aantal ongevallen.
 <br>
 In de onderstaande visualisatie stelt 1 blokje 1000 ongevallen voor.
 </div>
